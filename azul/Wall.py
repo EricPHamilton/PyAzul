@@ -9,7 +9,7 @@ class Wall:
         for i in range(5):
             line = ""
             for j in range(5):
-                line += str(self.cells[i][j]) + ","
+                line += str(int(self.cells[i][j])) + ","
             print(line)
     
 
