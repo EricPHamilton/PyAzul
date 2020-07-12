@@ -13,7 +13,7 @@ The bag is represented as a tuple of values in the following order:
 ### Center
 The center contains five factory circles that each hold four colored tiles and a 'pile' of tiles that starts the round with the white tile. As the round progresses, tiles that are not taken from the factories gather in the 'pile'. 
 
-The center is represented as a  6x6 grid, where each row represents the grouping of tiles and each column represents a color. In this scheme, each cell represents the count of a certain color at a certain location.
+The center is represented as a 6x6 grid, where each row represents the grouping of tiles and each column represents a color. In this scheme, each cell represents the count of a certain color at a certain location.
 | Location | #Blue | #Yellow | #Red | #Black | #Cyan | #White |
 |--|--|--|--|--|--|--|
 | Factory 1 | 1 | 2 | 0 | 0 | 1 | 0 |
@@ -42,7 +42,7 @@ The floor line holds any tiles that the player is forced to take and any 'overfl
 
 Every filled square in the floor line will subtract points from the player at the end of every round. These point values are {1, 1, 2, 2, 2, 3, 3}. The floor line is cleared at the end of each round after scoring.
 
-The floor line is represented as a single value in the neural network - the number of tiles currently placed.
+The floor line is represented as a single value in the neural network - the number of tiles it contains.
 
 #### Wall (Upper right)
 The wall is a 5x5 grid that persists throughout the entire game. Each cell can only be filled by one color. 
