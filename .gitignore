@@ -11,3 +11,5 @@ checkpoints/
 # For PyCharm users
 .idea/
 
+.vscode/launch.json
+.vscode/settings.json
