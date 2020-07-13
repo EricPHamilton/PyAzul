@@ -49,4 +49,46 @@ The wall is a 5x5 grid that persists throughout the entire game. Each cell can o
 
 The wall is represented as a 5x5 grid of boolean values. True indicates that a tile is present in that cell. False indicates otherwise.
 
+## Implementation notes
+### Action counting
+Actions are defined as incrementing values in the framework. Every integer corresponds with a single unique action taken by a player.
+
+In the case of Azul, a unique move is a unique conbination of the following values:
+ - Location of tiles taken from (Factory 1 - 5 or center)
+ - Color of tile taken (Excl. White)
+ - Placement of tiles on board (Pattern line 1 - 5 or floor line)
+
+This results in an action space of 6 * 5 * 6 == 180.
+
+0 - 29: Factory 1
+    0 - 5: Blue
+        0: Line 1
+        1: Line 2
+        2: Line 3
+        3: Line 4
+        4: Line 5
+        6: Floor
+    6 - 11: Yellow
+    12 - 17: Red
+        12: Line 1
+        13: Line 2
+        14: Line 3
+        15: Line 4
+        16: Line 5
+        17: Floor
+    18 - 23: Black
+    24 - 29: Cyan
+30 - 59: Factory 2 
+60 - 89: Factory 3 
+90 - 119: Factory 4 
+120 - 149: Factory 5 
+150 - 179: Center
+
+To convert from action -> int: location * 30 + Color * 6 + Line * 1
+
+To convert from int -> action:
+Location: num / 30
+Color: num = num % 30 -> num / 6
+Line: num = num % 30 -> num % 6
+
 

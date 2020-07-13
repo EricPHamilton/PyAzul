@@ -11,27 +11,18 @@ class AzulGame(Game):
         self.rand = random.Random()
 
     def getInitBoard(self):
-        """
-        Returns:
-            startBoard: a representation of the board (ideally this is the form
-                        that will be the input to your neural network)
-        """
-        board = Board(self.rand)
+        board = Board()
         return None
 
     def getBoardSize(self):
-        """
-        Returns:
-            (x,y): a tuple of board dimensions
-        """
-        pass
+        return (6, 6)
 
     def getActionSize(self):
-        """
-        Returns:
-            actionSize: number of all possible actions
-        """
-        pass
+        numActionableColors = 5 # Blue, Yellow, Red, Black, Cyan
+        numTileLocations = 6    # 5 factories, 1 center
+        numPlayerRows = 6       # 5 pattern lines, 1 floor line
+
+        return (numActionableColors * numTileLocations * numPlayerRows)
 
     def getNextState(self, board, player, action):
         """
@@ -43,7 +34,7 @@ class AzulGame(Game):
             nextBoard: board after applying action
             nextPlayer: player who plays in the next turn (should be -player)
         """
-        pass
+        return (board.getNextState(player, action), -player)
 
     def getValidMoves(self, board, player):
         """
@@ -66,33 +57,6 @@ class AzulGame(Game):
             r: 0 if game has not ended. 1 if player won, -1 if player lost,
                small non-zero value for draw.
                
-        """
-        pass
-
-    def getCanonicalForm(self, board, player):
-        """
-        Input:
-            board: current board
-            player: current player (1 or -1)
-        Returns:
-            canonicalBoard: returns canonical form of board. The canonical form
-                            should be independent of player. For e.g. in chess,
-                            the canonical form can be chosen to be from the pov
-                            of white. When the player is white, we can return
-                            board as is. When the player is black, we can invert
-                            the colors and return the board.
-        """
-        pass
-
-    def getSymmetries(self, board, pi):
-        """
-        Input:
-            board: current board
-            pi: policy vector of size self.getActionSize()
-        Returns:
-            symmForms: a list of [(board,pi)] where each tuple is a symmetrical
-                       form of the board and the corresponding pi vector. This
-                       is used when training the neural network from examples.
         """
         pass
 
