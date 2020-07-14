@@ -22,17 +22,40 @@ class Board():
         self.player2.display()
 
     def getNextState(self, player, actionInt):
-        action = self.decodeAction(actionInt)
+        action = self.decodeAction(player, actionInt)
         return self.executeAction(action)
     
-    def decodeAction(self, actionInt):
+    def decodeAction(self, player, actionInt):
+        if player == 1:
+            return self.player1
+        else:
+            return self.player2
+        
         location = actionInt // 30
         color = (actionInt % 30) // 6 + 1 # Enum is 1-indexed
         line = (actionInt  % 30) % 6
 
-        return (location, TileColor(color), line)
+        return (player, location, TileColor(color), line)
     
     def executeAction(self, action):
+        if not self.isActionValid(action):
+            print("Attempted to execute an invalid action! Quitting with action:", action)
+            exit(2)
+
         return self
+
+    def isActionValid(self, action):
+        player, source, color, line = action
+        
+        # Quit if source/color combo doesn't exist in center.
+        if not self.center.hasTiles(source, color):
+            return False
+
+        # Quit if line is full or is already of another color 
+        if not player.playerLines.isActionValid(color, line):
+            return False
+        
+        # Quit if the wall tile associated with the line/color is filled
+        
 
 
