@@ -3,6 +3,7 @@ from .TileCollection import TileCollection
 from .Center import Center
 from .Bag import Bag
 from .TileColor import TileColor
+from .AzulAction import AzulAction
 import random
 
 class Board():
@@ -38,7 +39,22 @@ class Board():
         color = (actionInt % 30) // 6
         line = (actionInt % 30) % 6
 
-        return (retPlayer, location, TileColor(color), line)
+        return AzulAction(retPlayer, location, TileColor(color), line)
+    
+    def isActionValid(self, action: AzulAction):
+        # Quit if source/color combo doesn't exist in center.
+        if self.center.countTiles(action.source, action.color) == 0:
+            return False
+
+        # Quit if line is full or is already of another color 
+        if not action.player.playerLines.isActionValid(action.color, action.line):
+            return False
+        
+        # Quit if the wall tile associated with the line/color is filled
+        if action.line != 5 and action.player.wall.isCellFilled(action.line, action.color):
+            return False
+        
+        return True
     
     def executeAction(self, action):
         if not self.isActionValid(action):
@@ -46,23 +62,6 @@ class Board():
             exit(2)
 
         return self
-
-    def isActionValid(self, action):
-        player, source, color, line = action
-        
-        # Quit if source/color combo doesn't exist in center.
-        if self.center.countTiles(source, color) == 0:
-            return False
-
-        # Quit if line is full or is already of another color 
-        if not player.playerLines.isActionValid(color, line):
-            return False
-        
-        # Quit if the wall tile associated with the line/color is filled
-        if line != 5 and player.wall.isCellFilled(line, color):
-            return False
-        
-        return True
         
 
 

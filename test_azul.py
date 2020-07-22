@@ -1,6 +1,7 @@
 from azul.AzulGame import AzulGame
 from azul.AzulLogic import Board
 from azul.TileColor import TileColor
+from azul.AzulAction import AzulAction
 import unittest
 
 class AzulTests(unittest.TestCase):
@@ -25,12 +26,32 @@ class AzulTests(unittest.TestCase):
 
         for i in range(180):
             action = board.decodeAction(1, i)
-            print(i, action, board.isActionValid(action))
+            print(i, action.toString(), board.isActionValid(action))
         
         self.assertEqual(1, 1)
 
 if __name__ == "__main__":
-    unittest.main()
+    #unittest.main()
+
+    game = AzulGame()
+    board = game.getInitBoard()
+    playerInt = 1
+
+    while True:
+        board.display()
+        if playerInt == 1:
+            player = board.player1
+        else:
+            player = board.player2
+
+        source = int(input("Source input (0 - 5):"))
+        color = int(input("Color input (0 - 4):"))
+        line = int(input("Line input (0 - 5):"))
+        action = AzulAction(player, source, TileColor(color), line)
+        actionInt = action.getActionInt()
+        print(str(action.getActionInt()))
+        board, playerInt = game.getNextState(board, playerInt, actionInt)
+
 
 
 

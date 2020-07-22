@@ -31,7 +31,7 @@ class TileCollection():
             sum += numColor
         return sum
     
-    def getCountOfColor(self, color):
+    def getCountOfColor(self, color: TileColor):
         return self.tiles[self.getColorIndex(color)]
     
     def pickRandomTiles(self, count, rand):

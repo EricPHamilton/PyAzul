@@ -12,7 +12,7 @@ class AzulGame(Game):
 
     def getInitBoard(self):
         board = Board()
-        return None
+        return board
 
     def getBoardSize(self):
         return (6, 6)
@@ -37,7 +37,7 @@ class AzulGame(Game):
         # will need to check for white tile at end of rounds
         return (board.getNextState(player, action), -player)
 
-    def getValidMoves(self, board, player):
+    def getValidMoves(self, board: Board, player: int):
         """
         Input:
             board: current board
@@ -47,7 +47,12 @@ class AzulGame(Game):
                         moves that are valid from the current board and player,
                         0 for invalid moves
         """
-        pass
+        moves = []
+        for i in range(179):
+            action = board.decodeAction(player, i)
+            moves.append(1) if action.isValid(board) else moves.append(0)
+
+        return moves
 
     def getGameEnded(self, board, player):
         """
@@ -60,6 +65,21 @@ class AzulGame(Game):
                
         """
         pass
+
+    def getCanonicalForm(self, board, player):
+        """
+        Input:
+            board: current board
+            player: current player (1 or -1)
+        Returns:
+            canonicalBoard: returns canonical form of board. The canonical form
+                            should be independent of player. For e.g. in chess,
+                            the canonical form can be chosen to be from the pov
+                            of white. When the player is white, we can return
+                            board as is. When the player is black, we can invert
+                            the colors and return the board.
+        """
+        return board
 
     def stringRepresentation(self, board):
         """
