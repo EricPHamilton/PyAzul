@@ -11,8 +11,22 @@ class Center():
         self.center = TileCollection(0, 0, 0, 0, 0, 1) 
     
     def display(self):
-        print("Loc\tBlue\tYellow\tRed\tBlack\tCyan\tWhite")
+        print(self.toString())
+
+    def toString(self):
+        retStr = "Loc\tBlue\tYellow\tRed\tBlack\tCyan\tWhite\n"
         for i in range(5):
-            print("Fac_", i, ":", self.factories[i].toString())
+            retStr += ("Fac_" + str(i) + ":" + self.factories[i].toString() + "\n")
         
-        print("Cent:", self.center.toString())
+        retStr += ("Cent:" + self.center.toString() + "\n")
+        return retStr   
+    
+    def countTiles(self, location, color):
+        if location != 5:
+            return self.factories[location].tiles.getCountOfColor(color)
+        elif location == 5:
+            return self.center.getCountOfColor(color)
+        else:
+            print("invalid location:", location)
+            exit(1)
+        

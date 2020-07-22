@@ -13,14 +13,23 @@ class AzulTests(unittest.TestCase):
         game = AzulGame()
         board = Board()
 
-        self.assertEqual(board.decodeAction(13), (0, TileColor.RED, 1))
-        self.assertEqual(board.decodeAction(0), (0, TileColor.BLUE, 0))
-        self.assertEqual(board.decodeAction(1), (0, TileColor.BLUE, 1))
-        self.assertEqual(board.decodeAction(121), (4, TileColor.BLUE, 1))
+        #self.assertEqual(board.decodeAction(1, 13), (0, TileColor.RED, 1))
+        #self.assertEqual(board.decodeAction(1, 0), (0, TileColor.BLUE, 0))
+        #self.assertEqual(board.decodeAction(1, 1), (0, TileColor.BLUE, 1))
+        #self.assertEqual(board.decodeAction(1, 121), (4, TileColor.BLUE, 1))
+    
+    def test_actionValid(self):
+        game = AzulGame()
+        board = Board()
+        board.display()
+
+        for i in range(180):
+            action = board.decodeAction(1, i)
+            print(i, action, board.isActionValid(action))
+        
+        self.assertEqual(1, 1)
 
 if __name__ == "__main__":
-    game = AzulGame()
-    game.display(Board())
     unittest.main()
 
 

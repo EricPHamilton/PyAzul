@@ -34,6 +34,7 @@ class AzulGame(Game):
             nextBoard: board after applying action
             nextPlayer: player who plays in the next turn (should be -player)
         """
+        # will need to check for white tile at end of rounds
         return (board.getNextState(player, action), -player)
 
     def getValidMoves(self, board, player):
@@ -68,7 +69,7 @@ class AzulGame(Game):
             boardString: a quick conversion of board to a string format.
                          Required by MCTS for hashing.
         """
-        pass
+        return board.toString()
 
     @staticmethod
     def display(board):

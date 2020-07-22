@@ -11,5 +11,7 @@ class Bag():
         return self.tiles.pickRandomTiles(4, self.rand)
 
     def display(self):
-        print("Bag:",end="")
-        self.tiles.display()
+        print(self.toString())
+    
+    def toString(self):
+        return "Bag: " + self.tiles.toString()

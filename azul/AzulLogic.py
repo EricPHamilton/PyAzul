@@ -7,8 +7,8 @@ import random
 
 class Board():
     def __init__(self):
-        self.player1 = Player()
-        self.player2 = Player()
+        self.player1 = Player(1)
+        self.player2 = Player(-1)
         self.bag = Bag()
         self.center = Center(self.bag)
 
@@ -20,6 +20,9 @@ class Board():
         self.player1.display()
         print()
         self.player2.display()
+    
+    def toString(self):
+        self.bag.toString() + self.center.toString() + self.player1.toString() + self.player2.toString()
 
     def getNextState(self, player, actionInt):
         action = self.decodeAction(player, actionInt)
@@ -27,15 +30,15 @@ class Board():
     
     def decodeAction(self, player, actionInt):
         if player == 1:
-            return self.player1
+            retPlayer = self.player1
         else:
-            return self.player2
+            retPlayer = self.player2
         
         location = actionInt // 30
-        color = (actionInt % 30) // 6 + 1 # Enum is 1-indexed
-        line = (actionInt  % 30) % 6
+        color = (actionInt % 30) // 6
+        line = (actionInt % 30) % 6
 
-        return (player, location, TileColor(color), line)
+        return (retPlayer, location, TileColor(color), line)
     
     def executeAction(self, action):
         if not self.isActionValid(action):
@@ -48,7 +51,7 @@ class Board():
         player, source, color, line = action
         
         # Quit if source/color combo doesn't exist in center.
-        if not self.center.hasTiles(source, color):
+        if self.center.countTiles(source, color) == 0:
             return False
 
         # Quit if line is full or is already of another color 
@@ -56,6 +59,11 @@ class Board():
             return False
         
         # Quit if the wall tile associated with the line/color is filled
+        if line != 5 and player.wall.isCellFilled(line, color):
+            return False
         
+        return True
+        
+
 
 

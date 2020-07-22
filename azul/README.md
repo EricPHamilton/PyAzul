@@ -67,7 +67,7 @@ This results in an action space of 6 * 5 * 6 == 180.
         2: Line 3
         3: Line 4
         4: Line 5
-        6: Floor
+        5: Floor
     6 - 11: Yellow
     12 - 17: Red
         12: Line 1

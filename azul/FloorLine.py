@@ -10,4 +10,7 @@ class FloorLine():
 
     def display(self):
         print("FLOOR LINE:")
-        print(self.numTiles)
+        print(self.toString())
+
+    def toString(self):
+        return self.tileCollection.toString()
