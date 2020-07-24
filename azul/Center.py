@@ -1,5 +1,7 @@
 from .TileCollection import TileCollection
 from .Factory import Factory
+from .AzulAction import AzulAction
+from .TileColor import TileColor
 
 class Center():
     def __init__(self, bag):
@@ -29,4 +31,31 @@ class Center():
         else:
             print("invalid location:", location)
             exit(1)
+    
+    def takeTiles(self, action: AzulAction) -> TileCollection:
+        if action.source < 5:
+            isCenter = False
+            sourceCollection = self.factories[action.source].tiles
+        else:
+            isCenter = True
+            sourceCollection = self.center
+        
+        color = TileColor(action.color)
+        count = sourceCollection.getCountOfColor(color)
+        retCollection = TileCollection(0, 0, 0, 0, 0, 0)
+        retCollection.addTiles(color, count)
+        sourceCollection.removeTiles(color, count)
+
+        if isCenter:
+            # check for white tile
+            if sourceCollection.getCountOfColor(TileColor.WHITE) > 0:
+                retCollection.addTiles(TileColor.WHITE, 1)
+                sourceCollection.removeTiles(TileColor.WHITE, 1)
+        else:
+            # Place other tiles in the center
+            sourceCollection.moveAllTiles(self.center)
+
+        return sourceCollection
+
+
         

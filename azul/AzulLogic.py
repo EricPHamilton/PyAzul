@@ -61,6 +61,14 @@ class Board():
             print("Attempted to execute an invalid action! Quitting with action:", action)
             exit(2)
 
+        # Manipulate tiles from center
+        tilesInHand = self.center.takeTiles(action)
+
+        # Place tiles on player board
+        overflow = action.player.placeTilesFromAction(action, tilesInHand)
+
+        # Potentially put overflow in lid
+
         return self
         
 
