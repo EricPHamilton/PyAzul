@@ -29,16 +29,16 @@ class Player:
         count = tiles.getCountOfColor(color)
         if action.line < 5:
             overflowForFloorLine = self.playerLines.placeTiles(action.line, color, count)
-            
-            # TODO: Need to implement playerlines place tiles and add overflow to the floor line.
-        else:
-            # add to floor line and calc overflow for lid
-            overflowNum = max(7 - (self.floorLine.tileCollection.getCount() + count), 0)
-            overflowCollection = TileCollection(0, 0, 0, 0, 0, 0)
-            overflowCollection.addTiles(color, overflowNum)
-            tiles.removeTiles(color, overflowNum)
-            tiles.moveAllTiles(self.floorLine.tileCollection)
-            return overflowCollection
+            count = overflowForFloorLine.getCount()
+            tiles = overflowForFloorLine
+
+        # add to floor line and calc overflow for lid
+        overflowNum = max((self.floorLine.tileCollection.getCount() + count) - 7, 0)
+        overflowCollection = TileCollection(0, 0, 0, 0, 0, 0)
+        overflowCollection.addTiles(color, overflowNum)
+        tiles.removeTiles(color, overflowNum)
+        tiles.moveAllTiles(self.floorLine.tileCollection)
+        return overflowCollection
 
 
         

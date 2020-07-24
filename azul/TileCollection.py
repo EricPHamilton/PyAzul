@@ -66,7 +66,7 @@ class TileCollection():
             print("Removed tiles that didn't exist: ", color, count)
             exit(0)
     
-    def moveAllTiles(self, location: TileCollection):
+    def moveAllTiles(self, location):
         for color in TileColor:
             count = self.getCountOfColor(color)
             location.addTiles(color, count)

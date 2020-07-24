@@ -55,7 +55,7 @@ class Center():
             # Place other tiles in the center
             sourceCollection.moveAllTiles(self.center)
 
-        return sourceCollection
+        return retCollection
 
 
         

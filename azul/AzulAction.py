@@ -1,15 +1,14 @@
-from .Player import Player
 from .TileColor import TileColor
 
 class AzulAction:
-    def __init__(self, player: Player, source, color: TileColor, line):
-        self.player = player
+    def __init__(self, playerID: id, source, color: TileColor, line):
+        self.playerID = playerID
         self.source = source
         self.color = color
         self.line = line
     
     def toString(self):
-        return str(self.player.id) + ", " + str(self.source) + ", " + str(self.color) + ", " + str(self.line)
+        return str(self.playerID) + ", " + str(self.source) + ", " + str(self.color) + ", " + str(self.line)
     
     def getActionInt(self) -> int:
         # location = actionInt // 30

@@ -1,13 +1,14 @@
 from .TileColor import TileColor
+from .TileCollection import TileCollection
 
 class PlayerLines():
     def __init__(self):
         self.lines = []
-        self.lines.append((1, None, 0))
-        self.lines.append((2, None, 0))
-        self.lines.append((3, None, 0))
-        self.lines.append((4, None, 0))
-        self.lines.append((5, None, 0))
+        self.lines.append([1, None, 0])
+        self.lines.append([2, None, 0])
+        self.lines.append([3, None, 0])
+        self.lines.append([4, None, 0])
+        self.lines.append([5, None, 0])
     
     def display(self):
         print(self.toString())
@@ -26,3 +27,14 @@ class PlayerLines():
             return False
         
         return True
+    
+    def placeTiles(self, line, color, count) -> TileCollection:
+        lineTuple = self.lines[line]
+        lineTuple[1] = color
+        overflowCount = max(lineTuple[2] + count - lineTuple[0], 0)
+        lineTuple[2] = max(lineTuple[2] + count, lineTuple[0])
+        
+        retCollection = TileCollection(0, 0, 0, 0, 0, 0)
+        retCollection.addTiles(color, overflowCount)
+        return retCollection
+        
