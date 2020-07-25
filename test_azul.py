@@ -52,14 +52,15 @@ class AzulTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    #unittest.main()
 
-    '''game = AzulGame()
-    board = game.getInitBoard()
+    game = AzulGame()
+    board = Board.convertFromArray(game.getInitBoard())
     playerInt = 1
 
     while True:
-        board.display()
+        print(board.convertToArray())
+
         if playerInt == 1:
             player = board.player1
         else:
@@ -71,8 +72,9 @@ if __name__ == "__main__":
         action = AzulAction(player, source, TileColor(color), line)
         actionInt = action.getActionInt()
         print(str(action.getActionInt()))
-        board, playerInt = game.getNextState(board, playerInt, actionInt)
-    '''
+        board, playerInt = game.getNextState(board.convertToArray(), playerInt, actionInt)
+        board = Board.convertFromArray(board)
+    
 
 
 

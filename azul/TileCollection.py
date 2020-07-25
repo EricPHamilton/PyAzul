@@ -1,4 +1,5 @@
 from .TileColor import TileColor
+import numpy as np
 
 class TileCollection():
     def __init__(self, numBlue, numYellow, numRed, numBlack, numCyan, numWhite):
@@ -71,3 +72,10 @@ class TileCollection():
             count = self.getCountOfColor(color)
             location.addTiles(color, count)
             self.removeTiles(color, count)
+    
+    def getArray(self):
+        return np.array(self.tiles)
+    
+    @staticmethod
+    def getFromArray(arr):
+        return TileCollection(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5])

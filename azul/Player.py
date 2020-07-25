@@ -4,6 +4,7 @@ from .PlayerLines import PlayerLines
 from .TileCollection import TileCollection
 from .TileColor import TileColor
 from .AzulAction import AzulAction
+import numpy as np
 
 class Player:
     def __init__(self, id):
@@ -57,6 +58,47 @@ class Player:
         tiles.removeTiles(color, overflowNum)
         tiles.moveAllTiles(self.floorLine.tileCollection)
         return overflowCollection
+    
+    def getArray(self):
+        arr = np.zeros((8, 6))
+        arr[0][0] = self.id
+        for i in range(5):
+            color = self.playerLines.lines[i][1]
+            if color is None:
+                color = -1
+            else:
+                color = color.value
+            arr[0][i + 1] = color
+        arr[1][0] = self.score
+        for i in range(5):
+            arr[1][i + 1] = self.playerLines.lines[i][2]
+        arr[2] = self.floorLine.tileCollection.getArray()
+        for i in range(5):
+            for j in range(6):
+                if j == 5: #This col will never be full. "-2" it so 0s dont get confusing.
+                    arr[3 + i][j] = -2
+                else:
+                    arr[3 + i][j] = int(self.wall.cells[i][j])
+        
+        return arr
 
-
+    @staticmethod
+    def getFromArray(arr):
+        retPlayer = Player(-2)
+        retPlayer.id = arr[0][0]
+        retPlayer.score = arr[1][0]
+        for i in range(5):
+            color = arr[0][i + 1]
+            if color == -1:
+                color = None
+            else:
+                color = TileColor(color)
+            retPlayer.playerLines.lines[i][1] = color
+            retPlayer.playerLines.lines[i][2] = arr[1][i + 1]
+        retPlayer.floorLine.tileCollection = TileCollection.getFromArray(arr[2])
+        for i in range(5):
+            for j in range(5):
+                retPlayer.wall.cells[i][j] = arr[3 + i][j]
+        
+        return retPlayer
         

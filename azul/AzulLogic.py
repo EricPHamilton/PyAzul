@@ -104,11 +104,11 @@ class Board():
 
         tilesToBag = self.player1.finishRound()
         self.player1.floorLine.tileCollection.moveAllTiles(self.lid)
-        tilesToBag.moveAllTiles(self.bag)
+        tilesToBag.moveAllTiles(self.bag.tiles)
         
         tilesToBag = self.player2.finishRound()
         self.player2.floorLine.tileCollection.moveAllTiles(self.lid)
-        tilesToBag.moveAllTiles(self.bag)
+        tilesToBag.moveAllTiles(self.bag.tiles)
         #TODO need to indicate that player w/ white tile goes first
     
     # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
@@ -116,19 +116,32 @@ class Board():
         arr = np.zeros((24, 6))
         for i in range(5):
             arr[i] = self.center.factories[i].tiles.getArray()
-        arr[5] = self.center.center.tiles.getArray()
+        arr[5] = self.center.center.getArray()
         arr[6] = self.bag.tiles.getArray()
-        arr[7] = self.lid.tiles.getArray()
+        arr[7] = self.lid.getArray()
 
         player1Arr = self.player1.getArray()
+        for i in range(8):
+            arr[8 + i] = player1Arr[i]
+
         player2Arr = self.player2.getArray()
-        '''
-        arr[8][0] = 1
+        for i in range(8):
+            arr[16 + i] = player2Arr[i]
+        
+        return arr
+    
+    # More ugly. Now we need to create board given the array output from convertToArray...
+    @staticmethod
+    def convertFromArray(arr):
+        arr = arr.astype(int)
+        retBoard = Board()
         for i in range(5):
-            arr[8][i + 1] = self.player1.playerLines.lines[i][1]
-        arr[9][0] = self.player1.score
-        for i in range(5):
-            arr[9][i + 1] = self.player1.playerLines.lines[i][2]
-        arr[10] = self.player1.floorLine.tileCollection.getArray()
-        # player 1 wall
-        '''
+            retBoard.center.factories[i].tiles = TileCollection.getFromArray(arr[i])
+        retBoard.center.center = TileCollection.getFromArray(arr[5])
+        retBoard.bag.tiles = TileCollection.getFromArray(arr[6])
+        retBoard.lid = TileCollection.getFromArray(arr[7])
+        retBoard.player1 = Player.getFromArray(arr[8:16])
+        retBoard.player2 = Player.getFromArray(arr[16:])
+        return retBoard
+
+        

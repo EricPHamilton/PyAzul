@@ -11,11 +11,11 @@ class AzulGame(Game):
         self.rand = random.Random()
 
     def getInitBoard(self):
-        board = Board()
+        board = Board().convertToArray()
         return board
 
     def getBoardSize(self):
-        return (6, 6)
+        return (24, 6)
 
     def getActionSize(self):
         numActionableColors = 5 # Blue, Yellow, Red, Black, Cyan
@@ -35,7 +35,9 @@ class AzulGame(Game):
             nextPlayer: player who plays in the next turn (should be -player)
         """
         # will need to check for white tile at end of rounds
-        return (board.getNextState(player, action), -player)
+        boardObj = Board.convertFromArray(board)
+        newBoard = boardObj.getNextState(player, action)
+        return (newBoard.convertToArray(), -player)
 
     def getValidMoves(self, board: Board, player: int):
         """
@@ -47,10 +49,11 @@ class AzulGame(Game):
                         moves that are valid from the current board and player,
                         0 for invalid moves
         """
+        boardObj = Board.convertFromArray(board)
         moves = []
-        for i in range(179):
-            action = board.decodeAction(player, i)
-            moves.append(1) if action.isValid(board) else moves.append(0)
+        for i in range(180):
+            action = boardObj.decodeAction(player, i)
+            moves.append(1) if boardObj.isActionValid(action) else moves.append(0)
 
         return moves
 
@@ -64,13 +67,14 @@ class AzulGame(Game):
                small non-zero value for draw.
                
         """
-        if board.roundFinished:
+        boardObj = Board.convertFromArray(board)
+        if boardObj.roundFinished:
             if player == 1:
-                curPlayer = board.player1
-                otherPlayer = board.player2
+                curPlayer = boardObj.player1
+                otherPlayer = boardObj.player2
             else:
-                curPlayer = board.player2
-                otherPlayer = board.player1
+                curPlayer = boardObj.player2
+                otherPlayer = boardObj.player1
             
             if curPlayer.score > otherPlayer.score:
                 return 1
@@ -104,9 +108,23 @@ class AzulGame(Game):
             boardString: a quick conversion of board to a string format.
                          Required by MCTS for hashing.
         """
-        return board.toString()
+        return str(board)
+    
+    def getSymmetries(self, board, pi):
+        """
+        Input:
+            board: current board
+            pi: policy vector of size self.getActionSize()
+
+        Returns:
+            symmForms: a list of [(board,pi)] where each tuple is a symmetrical
+                       form of the board and the corresponding pi vector. This
+                       is used when training the neural network from examples.
+        """
+        # Azul has no symmetries :(
+        return [(board, pi)]
 
     @staticmethod
     def display(board):
-        board.display()
+        print(board)
     
