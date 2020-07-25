@@ -64,7 +64,22 @@ class AzulGame(Game):
                small non-zero value for draw.
                
         """
-        pass
+        if board.roundIsFinished:
+            if player == 1:
+                curPlayer = board.player1
+                otherPlayer = board.player2
+            else:
+                curPlayer = board.player2
+                otherPlayer = board.player1
+            
+            if curPlayer.score > otherPlayer.score:
+                return 1
+            elif otherPlayer.score > curPlayer.score:
+                return -1
+            else:
+                return .000001
+        else:
+            return 0
 
     def getCanonicalForm(self, board, player):
         """

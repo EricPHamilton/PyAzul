@@ -11,6 +11,7 @@ class Player:
         self.wall = Wall()
         self.floorLine = FloorLine()
         self.playerLines = PlayerLines()
+        self.score = 0
     
     def toString(self):
         return str(self.id) + "\n" + self.playerLines.toString() + self.wall.toString() + self.floorLine.toString()
@@ -18,6 +19,23 @@ class Player:
     def display(self):
         print(self.toString())
     
+    def finishRound(self) -> TileCollection:
+        wallScore = 0
+        floorScore = self.floorLine.getScore()
+        tilesFromLines = TileCollection(0, 0, 0, 0, 0, 0)
+
+        for line in self.playerLines.lines:
+            color = line[1]
+            if color != None:
+                if line[0] == line[2]:
+                    wallScore += self.wall.addTile(line[0] - 1, color)
+                    tilesFromLines.addTiles(color, line[0] - 1) # We moved one tile to the wall, so it's num - 1.
+                else:
+                    tilesFromLines.addTiles(color, line[2])
+        
+        self.score = max(wallScore - floorScore, 0)
+        return tilesFromLines
+
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:
         # If we picked the white tile, place it on the floor line.
         if tiles.getCountOfColor(TileColor.WHITE) > 0:

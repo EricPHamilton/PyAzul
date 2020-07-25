@@ -13,6 +13,7 @@ class Board():
         self.bag = Bag()
         self.center = Center(self.bag)
         self.lid = TileCollection(0, 0, 0, 0, 0, 0)
+        self.roundFinished = False
 
     def display(self):
         self.bag.display()
@@ -81,8 +82,29 @@ class Board():
 
         # Potentially put overflow in lid
         self.lid.addTiles(action.color, overflow.getCountOfColor(action.color))
+
+        if self.shouldFinishRound():
+            self.finishRound()
+
         return self
         
+    def shouldFinishRound(self) -> bool:
+        for factory in self.center.factories:
+            if factory.tiles.getCount() > 0:
+                return False
+        
+        if self.center.center.getCount() > 0:
+            return False
+        
+        return True
+    
+    def finishRound(self):
+        self.roundFinished = True
 
+        tilesToBag = self.player1.finishRound()
+        self.player1.floorLine.tileCollection.moveAllTiles(self.lid)
+        
+        tilesToBag = self.player2.finishRound()
+        self.player2.floorLine.tileCollection.moveAllTiles(self.lid)
 
-
+        #TODO need to indicate that player w/ white tile goes first
