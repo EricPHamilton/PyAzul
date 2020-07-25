@@ -17,33 +17,30 @@ class Board():
         self.roundFinished = False
 
     def display(self):
-        self.bag.display()
-        self.lid.display()
-        print()
+        print("---------------------------------------------------------")
+        #self.bag.display()
+        #self.lid.display()
+        #print()
         self.center.display()
         print()
         self.player1.display()
         print()
         self.player2.display()
+        print("---------------------------------------------------------")
     
     def toString(self):
-        self.bag.toString() + self.lid.toString() + self.center.toString() + self.player1.toString() + self.player2.toString()
+        return self.bag.toString() + self.lid.toString() + self.center.toString() + self.player1.toString() + self.player2.toString()
 
     def getNextState(self, player, actionInt):
         action = self.decodeAction(player, actionInt)
         return self.executeAction(action)
     
-    def decodeAction(self, player, actionInt):
-        if player == 1:
-            retPlayer = self.player1
-        else:
-            retPlayer = self.player2
-        
+    def decodeAction(self, player: int, actionInt):
         location = actionInt // 30
         color = (actionInt % 30) // 6
         line = (actionInt % 30) % 6
 
-        return AzulAction(retPlayer.id, location, TileColor(color), line)
+        return AzulAction(player, location, TileColor(color), line)
     
     def getPlayerFromAction(self, action: AzulAction) -> Player:
         if action.playerID == 1:
@@ -68,9 +65,12 @@ class Board():
         
         return True
     
-    def executeAction(self, action):
+    def executeAction(self, action: AzulAction):
         if not self.isActionValid(action):
-            print("Attempted to execute an invalid action! Quitting with action:", action)
+            print("Attempted to execute an invalid action! Quitting with action:", action.toString())
+            #print("actionColor:", action.color, "lineColor:", self.getPlayerFromAction(action).playerLines.lines[action.line][1])
+            #action.playerID = -action.playerID
+            #print("Swap player:", self.isActionValid(action))
             exit(2)
 
         actionPlayer = self.getPlayerFromAction(action)
@@ -113,7 +113,7 @@ class Board():
     
     # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
     def convertToArray(self):
-        arr = np.zeros((24, 6))
+        arr = np.zeros((25, 6))
         for i in range(5):
             arr[i] = self.center.factories[i].tiles.getArray()
         arr[5] = self.center.center.getArray()
@@ -128,6 +128,15 @@ class Board():
         for i in range(8):
             arr[16 + i] = player2Arr[i]
         
+        arr[24][0] = int(self.roundFinished)
+        for i in range(5):
+            arr[24][i + 1] = -2
+
+        '''board2 = Board.convertFromArray(arr)
+        if self.toString() != board2.toString():
+            print("There was a mistake converting from board -> arr")
+            exit(-2)'''
+
         return arr
     
     # More ugly. Now we need to create board given the array output from convertToArray...
@@ -141,7 +150,15 @@ class Board():
         retBoard.bag.tiles = TileCollection.getFromArray(arr[6])
         retBoard.lid = TileCollection.getFromArray(arr[7])
         retBoard.player1 = Player.getFromArray(arr[8:16])
-        retBoard.player2 = Player.getFromArray(arr[16:])
+        retBoard.player2 = Player.getFromArray(arr[16:24])
+        retBoard.roundFinished = bool(arr[24][0])
+
+        '''arr2 = retBoard.convertToArray()
+        if not np.array_equal(arr, arr2):
+            print("There was a mistake converting from arr -> board")
+            exit(-2)
+        '''
+
         return retBoard
 
         

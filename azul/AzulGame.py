@@ -4,6 +4,9 @@ sys.path.append('..')
 from Game import Game
 from .AzulLogic import Board
 import random
+import numpy as np
+import itertools
+from sympy.utilities.iterables import multiset_permutations
 
 class AzulGame(Game):
 
@@ -15,7 +18,7 @@ class AzulGame(Game):
         return board
 
     def getBoardSize(self):
-        return (24, 6)
+        return (25, 6)
 
     def getActionSize(self):
         numActionableColors = 5 # Blue, Yellow, Red, Black, Cyan
@@ -36,6 +39,7 @@ class AzulGame(Game):
         """
         # will need to check for white tile at end of rounds
         boardObj = Board.convertFromArray(board)
+
         newBoard = boardObj.getNextState(player, action)
         return (newBoard.convertToArray(), -player)
 
@@ -50,10 +54,19 @@ class AzulGame(Game):
                         0 for invalid moves
         """
         boardObj = Board.convertFromArray(board)
+
+        arr2 = boardObj.convertToArray()
+        if not np.array_equal(board, arr2):
+            print("There was a mistake converting from arr -> board")
+            exit(-2)
+
         moves = []
         for i in range(180):
             action = boardObj.decodeAction(player, i)
-            moves.append(1) if boardObj.isActionValid(action) else moves.append(0)
+            if boardObj.isActionValid(action):
+                moves.append(1)
+            else:
+                moves.append(0)
 
         return moves
 
@@ -98,7 +111,19 @@ class AzulGame(Game):
                             board as is. When the player is black, we can invert
                             the colors and return the board.
         """
-        return board
+        # basically just swap the player rows if player == -1
+        if player == -1:
+            arr = np.zeros((25, 6))
+            for i in range(8):
+                arr[i] = board[i]
+            for i in range(8):
+                arr[i + 8] = board[i + 16]
+            for i in range(8):
+                arr[i + 16] = board[i + 8]
+            arr[24] = board[24]
+            return arr
+        else:
+            return board
 
     def stringRepresentation(self, board):
         """
@@ -122,9 +147,21 @@ class AzulGame(Game):
                        is used when training the neural network from examples.
         """
         # Azul has no symmetries :(
+
+        # Only symmetries are ALL permutations of the factory squares. Uh oh.
+        # Commenting out for now. Not sure how to permute the pi vector :(
+        '''baseSet = []
+        for i in range(5):
+            baseSet.append(list(board[i].astype(int)))
+        perms = list(multiset_permutations(baseSet))
+
+        retExamples = 
+        for perm in perms:'''
+
         return [(board, pi)]
 
     @staticmethod
     def display(board):
-        print(board)
+        boardObj = Board.convertFromArray(board)
+        boardObj.display()
     

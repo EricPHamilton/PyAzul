@@ -26,6 +26,9 @@ class TileCollection():
     def toString(self):
         return str(self.tiles)
     
+    def getOutputString(self):
+        return str(self.tiles[0]) + "\t" + str(self.tiles[1]) + "\t" + str(self.tiles[2]) + "\t" + str(self.tiles[3]) + "\t" + str(self.tiles[4]) + "\t" + str(self.tiles[5])
+    
     def getCount(self):
         sum = 0
         for numColor in self.tiles:

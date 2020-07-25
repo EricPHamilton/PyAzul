@@ -13,7 +13,15 @@ class Center():
         self.center = TileCollection(0, 0, 0, 0, 0, 1) 
     
     def display(self):
-        print(self.toString())
+        print("\tBlue\tYellow\tRed\tBlack\tCyan\tWhite")
+        for i in range(5):
+            string = "Fac_" + str(i) + ":\t"
+            string += (self.factories[i].tiles.getOutputString() + "\t")
+            print(string)
+        string = "Cent:\t" + self.center.getOutputString()
+        print(string)
+        
+        
 
     def toString(self):
         retStr = "Loc\tBlue\tYellow\tRed\tBlack\tCyan\tWhite\n"

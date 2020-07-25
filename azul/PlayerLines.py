@@ -14,10 +14,10 @@ class PlayerLines():
         print(self.toString())
     
     def toString(self):
-        string = "PLAYER LINES:\n"
+        string = ""
         for line in self.lines:
             string += (str(line) + "\n")
-        return string
+        return string[:-1]
     
     def isActionValid(self, color, line):
         if line != 5 and self.lines[line][0] == self.lines[line][2]:
