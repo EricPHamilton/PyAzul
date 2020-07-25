@@ -86,6 +86,7 @@ class Wall:
         while trackCol < 5:
             if self.cells[row][trackCol] == True:
                 count += 1
+                trackCol += 1
             else:
                 break
         
@@ -103,6 +104,7 @@ class Wall:
         while trackRow < 5:
             if self.cells[trackRow][col] == True:
                 count += 1
+                trackRow += 1
             else:
                 break
         

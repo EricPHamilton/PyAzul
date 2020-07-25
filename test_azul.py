@@ -8,7 +8,7 @@ class AzulTests(unittest.TestCase):
     def test_board(self):
         game = AzulGame()
         board = Board()
-        self.assertEqual(board.player1.floorLine.getCount(), 0)
+        self.assertEqual(board.player1.floorLine.tileCollection.getCount(), 0)
     
     def test_decodeAction(self):
         game = AzulGame()
@@ -22,18 +22,39 @@ class AzulTests(unittest.TestCase):
     def test_actionValid(self):
         game = AzulGame()
         board = Board()
-        board.display()
+        #board.display()
 
         for i in range(180):
             action = board.decodeAction(1, i)
-            print(i, action.toString(), board.isActionValid(action))
+            #print(i, action.toString(), board.isActionValid(action))
         
         self.assertEqual(1, 1)
+    
+    def test_gridTilePlacementCounts(self):
+        board = Board()
+        board.player1.wall.cells[2][1] = True
+        board.player1.wall.cells[2][2] = True
+        board.player1.wall.cells[2][3] = True
+        board.player1.wall.cells[2][4] = True
+        self.assertEqual(board.player1.wall.getHorizontalLinkCount(2, 3), 4)
+
+        board = Board()
+        board.player1.wall.cells[1][2] = True
+        board.player1.wall.cells[2][2] = True
+        board.player1.wall.cells[3][2] = True
+        board.player1.wall.cells[4][2] = True
+        self.assertEqual(board.player1.wall.getVerticalLinkCount(4, 2), 4)
+
+        board = Board()
+        board.player1.wall.cells[2][2] = True
+        self.assertEqual(board.player1.wall.getVerticalLinkCount(2, 2), 1)
+        self.assertEqual(board.player1.wall.getHorizontalLinkCount(2, 2), 1)
+
 
 if __name__ == "__main__":
-    #unittest.main()
+    unittest.main()
 
-    game = AzulGame()
+    '''game = AzulGame()
     board = game.getInitBoard()
     playerInt = 1
 
@@ -51,7 +72,7 @@ if __name__ == "__main__":
         actionInt = action.getActionInt()
         print(str(action.getActionInt()))
         board, playerInt = game.getNextState(board, playerInt, actionInt)
-
+    '''
 
 
 

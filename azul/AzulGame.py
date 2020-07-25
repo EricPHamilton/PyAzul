@@ -22,7 +22,7 @@ class AzulGame(Game):
         numTileLocations = 6    # 5 factories, 1 center
         numPlayerRows = 6       # 5 pattern lines, 1 floor line
 
-        return (numActionableColors * numTileLocations * numPlayerRows)
+        return numActionableColors * numTileLocations * numPlayerRows
 
     def getNextState(self, board, player, action):
         """
