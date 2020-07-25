@@ -3,9 +3,12 @@ import logging
 import coloredlogs
 
 from Coach import Coach
-from othello.OthelloGame import OthelloGame as Game
-from othello.pytorch.NNet import NNetWrapper as nn
-from utils import *
+#from othello.OthelloGame import OthelloGame as Game
+#from othello.pytorch.NNet import NNetWrapper as nn
+from azul.AzulGame import AzulGame as Game
+from azul.pytorch.NNet import NNetWrapper as nn
+
+from utils import dotdict
 
 log = logging.getLogger(__name__)
 
@@ -31,13 +34,13 @@ args = dotdict({
 
 def main():
     log.info('Loading %s...', Game.__name__)
-    g = Game(6)
+    g = Game()
 
     log.info('Loading %s...', nn.__name__)
     nnet = nn(g)
 
     if args.load_model:
-        log.info('Loading checkpoint "%s/%s"...', args.load_folder_file)
+        log.info('Loading checkpoint "%s/%s"...', args.load_folder_file, "asdf")
         nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
     else:
         log.warning('Not loading a checkpoint!')

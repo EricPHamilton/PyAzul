@@ -5,6 +5,7 @@ from .Bag import Bag
 from .TileColor import TileColor
 from .AzulAction import AzulAction
 import random
+import numpy as np
 
 class Board():
     def __init__(self):
@@ -103,8 +104,31 @@ class Board():
 
         tilesToBag = self.player1.finishRound()
         self.player1.floorLine.tileCollection.moveAllTiles(self.lid)
+        tilesToBag.moveAllTiles(self.bag)
         
         tilesToBag = self.player2.finishRound()
         self.player2.floorLine.tileCollection.moveAllTiles(self.lid)
-
+        tilesToBag.moveAllTiles(self.bag)
         #TODO need to indicate that player w/ white tile goes first
+    
+    # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
+    def convertToArray(self):
+        arr = np.zeros((24, 6))
+        for i in range(5):
+            arr[i] = self.center.factories[i].tiles.getArray()
+        arr[5] = self.center.center.tiles.getArray()
+        arr[6] = self.bag.tiles.getArray()
+        arr[7] = self.lid.tiles.getArray()
+
+        player1Arr = self.player1.getArray()
+        player2Arr = self.player2.getArray()
+        '''
+        arr[8][0] = 1
+        for i in range(5):
+            arr[8][i + 1] = self.player1.playerLines.lines[i][1]
+        arr[9][0] = self.player1.score
+        for i in range(5):
+            arr[9][i + 1] = self.player1.playerLines.lines[i][2]
+        arr[10] = self.player1.floorLine.tileCollection.getArray()
+        # player 1 wall
+        '''

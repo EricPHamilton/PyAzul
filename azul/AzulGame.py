@@ -64,7 +64,7 @@ class AzulGame(Game):
                small non-zero value for draw.
                
         """
-        if board.roundIsFinished:
+        if board.roundFinished:
             if player == 1:
                 curPlayer = board.player1
                 otherPlayer = board.player2
