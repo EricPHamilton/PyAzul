@@ -109,6 +109,11 @@ class Board():
         tilesToBag = self.player2.finishRound()
         self.player2.floorLine.tileCollection.moveAllTiles(self.lid)
         tilesToBag.moveAllTiles(self.bag.tiles)
+
+        #print("Player 1 wall:", str(self.player1.score), "points.")
+        #print(self.player1.wall.toString())
+        #print("Player 2 wall:", str(self.player2.score), "points.")
+        #print(self.player2.wall.toString())
         #TODO need to indicate that player w/ white tile goes first
     
     # This will be ugly... We need to convert the entirety of the board into an array. Yikes.

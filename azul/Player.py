@@ -36,7 +36,7 @@ class Player:
                 else:
                     tilesFromLines.addTiles(color, line[2])
         
-        self.score = max(wallScore - floorScore, 0)
+        self.score = max(wallScore + floorScore, 0)
         return tilesFromLines
 
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:

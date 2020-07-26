@@ -18,19 +18,19 @@ class HumanAzulPlayer():
         self.game = game
     
     def play(self, board):
-        valid = self.game.getValidMoves(board, -1)
-        
-        source = int(input("Source input (0 - 5):"))
-        color = int(input("Color input (0=Blue, 1=Yellow):"))
-        line = int(input("Line input (0 - 5):"))
+        valid = self.game.getValidMoves(board, 1)
 
-        action = AzulAction(-1, source, TileColor(color), line)
-        actionInt = action.getActionInt()
+        while True:
+            source = int(input("Source input (0 - 5):"))
+            color = int(input("Color input (0=Blue, 1=Yellow):"))
+            line = int(input("Line input (0 - 5):"))
 
-        if valid[actionInt] == 1:
-            return actionInt
-        else:
-            print("attempted invalid move")
-            quit(-2)
+            action = AzulAction(-1, source, TileColor(color), line)
+            actionInt = action.getActionInt()
+
+            if valid[actionInt] == 1:
+                return actionInt
+            else:
+                print("attempted invalid move. try again.")
         
         return None

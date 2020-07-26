@@ -9,12 +9,14 @@ class Wall:
         print(self.toString())
     
     def toString(self):
+        string = ""
         for i in range(5):
             line = ""
             for j in range(5):
                 line += str(int(self.cells[i][j])) + ","
             line += "\n"
-        return line
+            string += line
+        return string
 
     @staticmethod
     def getColorGrid():

@@ -32,7 +32,7 @@ class PlayerLines():
         lineTuple = self.lines[line]
         lineTuple[1] = color
         overflowCount = max(lineTuple[2] + count - lineTuple[0], 0)
-        lineTuple[2] = max(lineTuple[2] + count, lineTuple[0])
+        lineTuple[2] = min(lineTuple[2] + count, lineTuple[0])
         
         retCollection = TileCollection(0, 0, 0, 0, 0, 0)
         retCollection.addTiles(color, overflowCount)

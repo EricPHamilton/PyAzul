@@ -32,7 +32,7 @@ if human_vs_cpu:
     player2 = hp
 else:
     n2 = NNet(g)
-    n2.load_checkpoint('./temp/', 'best.pth.tar')
+    n2.load_checkpoint('./temp/', 'checkpoint_35.pth.tar')
     args2 = dotdict({'numMCTSSims': 50, 'cpuct': 1.0})
     mcts2 = MCTS(g, n2, args2)
     n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
