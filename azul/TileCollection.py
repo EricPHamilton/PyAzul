@@ -39,23 +39,14 @@ class TileCollection():
         return self.tiles[self.getColorIndex(color)]
     
     def pickRandomTiles(self, count, rand):
+        sample = [TileColor.BLUE] * self.tiles[0] + [TileColor.YELLOW] * self.tiles[1] + [TileColor.RED] * self.tiles[2] + [TileColor.BLACK] * self.tiles[3] + [TileColor.CYAN] * self.tiles[4]
+        randSample = rand.sample(sample, count)
+
         retTiles = TileCollection(0, 0, 0, 0, 0, 0)
-        for _ in range(count):
-            index = rand.random() * self.getCount()
-            if index < self.tiles[0]:
-                color = TileColor.BLUE
-            elif index < self.tiles[0] + self.tiles[1]:
-                color = TileColor.YELLOW
-            elif index < self.tiles[0] + self.tiles[1] + self.tiles[2]:
-                color = TileColor.RED
-            elif index < self.tiles[0] + self.tiles[1] + self.tiles[2] + self.tiles[3]:
-                color = TileColor.BLACK
-            elif index < self.tiles[0] + self.tiles[1] + self.tiles[2] + self.tiles[3] + self.tiles[4]:
-                color = TileColor.CYAN
-            else:
-                color = TileColor.WHITE
-            self.removeTiles(color, 1)
-            retTiles.addTiles(color, 1)
+
+        for tile in randSample:
+            self.removeTiles(tile, 1)
+            retTiles.addTiles(tile, 1)
         
         return retTiles
 
