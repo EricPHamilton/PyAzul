@@ -10,13 +10,14 @@ class PlayerLines():
         self.lines.append([4, None, 0])
         self.lines.append([5, None, 0])
     
-    def display(self):
-        print(self.toString())
-    
     def toString(self):
         string = ""
-        for line in self.lines:
-            string += (str(line) + "\n")
+        for i in range(5):
+            if (self.lines[i][2] == 0): 
+                countColorString = "None"
+            else:
+                countColorString = str(self.lines[i][2]) + " " + self.lines[i][1].name
+            string += ("Line " + str(i + 1) + ": ") + countColorString + "\n"
         return string[:-1]
     
     def isActionValid(self, color, line):

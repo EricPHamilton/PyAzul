@@ -21,10 +21,21 @@ class HumanAzulPlayer():
         valid = self.game.getValidMoves(board, 1)
 
         while True:
-            source = int(input("Source input (0 - 5):"))
-            color = int(input("Color input (0=Blue, 1=Yellow):"))
-            line = int(input("Line input (0 - 5):"))
+            source = int(input("Take tiles from: "))
+            if source == 'c':
+                source = 5
+            else:
+                source = int(source) - 1
+            
+            color = int(input("Color: "))
+            color = color - 1
 
+            line = int(input("What line to place on: "))
+            if line == 'f':
+                line = 5
+            else:
+                line = int(line) - 1
+            
             action = AzulAction(-1, source, TileColor(color), line)
             actionInt = action.getActionInt()
 

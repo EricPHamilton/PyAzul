@@ -18,7 +18,7 @@ class Player:
         return str(self.id) + "\n" + self.playerLines.toString() + self.wall.toString() + self.floorLine.toString()
     
     def display(self):
-        print("Player", self.id)
+        print("Player:", self.id)
         print(self.playerLines.toString())
         print("Floor line:", self.floorLine.tileCollection.getCount())
     
