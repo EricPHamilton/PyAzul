@@ -19,3 +19,16 @@ class AzulAction:
         sum += self.color.value * 6
         sum += int(self.line)
         return sum
+    
+    def getTurnExplanationString(self) -> str:
+        if self.source <= 4:
+            source = "factory #" + str(self.source + 1)
+        else:
+            source = "the center"
+        
+        if self.line <= 4:
+            line = "line " + str(self.line + 1)
+        else:
+            line = "the floor line"
+
+        return str(f"Player took {self.color.name} tiles from {source} and put them on {line}")

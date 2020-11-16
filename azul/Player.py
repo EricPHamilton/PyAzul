@@ -18,26 +18,40 @@ class Player:
         return str(self.id) + "\n" + self.playerLines.toString() + self.wall.toString() + self.floorLine.toString()
     
     def display(self):
-        print("Player:", self.id)
-        print(self.playerLines.toString())
+        print("Player:", self.id, "\tScore:", self.score)
+
+        playerLineStrings = self.playerLines.toString().split("\n")
+        wallStrings = self.wall.toString().split("\n")
+        linesAndWall = ""
+        for i in range(5):
+            addition = (playerLineStrings[i] + "\t\t\t" + wallStrings[i] + "\n")
+            linesAndWall += addition
+
+        print(linesAndWall[:-1])
+
         print("Floor line:", self.floorLine.tileCollection.getCount())
     
-    def finishRound(self) -> TileCollection:
+    def finishRound(self) -> tuple:
         wallScore = 0
         floorScore = self.floorLine.getScore()
-        tilesFromLines = TileCollection(0, 0, 0, 0, 0, 0)
+        tilesToBag = TileCollection(0, 0, 0, 0, 0, 0)
 
         for line in self.playerLines.lines:
             color = line[1]
             if color != None:
                 if line[0] == line[2]:
                     wallScore += self.wall.addTile(line[0] - 1, color)
-                    tilesFromLines.addTiles(color, line[0] - 1) # We moved one tile to the wall, so it's num - 1.
+                    tilesToBag.addTiles(color, line[0] - 1) # We moved one tile to the wall, so it's num - 1.
+                    line[1] = None
+                    line[2] = 0
                 else:
-                    tilesFromLines.addTiles(color, line[2])
+                    tilesToBag.addTiles(color, line[2])
+
+        tilesToLid = self.floorLine.tileCollection.copy()
+        tilesToLid.setCountOfColor(TileColor.WHITE, 0)
         
         self.score = max(wallScore + floorScore, 0)
-        return tilesFromLines
+        return (tilesToBag, tilesToLid)
 
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:
         # If we picked the white tile, place it on the floor line.

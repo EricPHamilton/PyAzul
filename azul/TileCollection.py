@@ -5,23 +5,11 @@ class TileCollection():
     def __init__(self, numBlue, numYellow, numRed, numBlack, numCyan, numWhite):
         self.tiles = [numBlue, numYellow, numRed, numBlack, numCyan, numWhite]
 
-    @staticmethod
-    def getColorIndex(color):
-        if color == TileColor.BLUE:
-            return 0
-        elif color == TileColor.YELLOW:
-            return 1
-        elif color == TileColor.RED:
-            return 2
-        elif color == TileColor.BLACK:
-            return 3
-        elif color == TileColor.CYAN:
-            return 4
-        elif color == TileColor.WHITE:
-            return 5
+    def copy(self):
+        return TileCollection(self.tiles[0], self.tiles[1], self.tiles[2], self.tiles[3], self.tiles[4], self.tiles[5])
 
     def display(self):
-        print(self.tiles)
+        print("Lid:",self.tiles)
     
     def toString(self):
         return str(self.tiles)
@@ -36,7 +24,10 @@ class TileCollection():
         return sum
     
     def getCountOfColor(self, color: TileColor):
-        return self.tiles[self.getColorIndex(color)]
+        return self.tiles[color.value]
+    
+    def setCountOfColor(self, color: TileColor, count: int):
+        self.tiles[color.value] = count
     
     def pickRandomTiles(self, count, rand):
         sample = [TileColor.BLUE] * self.tiles[0] + [TileColor.YELLOW] * self.tiles[1] + [TileColor.RED] * self.tiles[2] + [TileColor.BLACK] * self.tiles[3] + [TileColor.CYAN] * self.tiles[4]
@@ -51,13 +42,11 @@ class TileCollection():
         return retTiles
 
     def addTiles(self, color, count):
-        index = TileCollection.getColorIndex(color)
-        self.tiles[index] += count
+        self.tiles[color.value] += count
 
     def removeTiles(self, color, count):
-        index = TileCollection.getColorIndex(color)
-        self.tiles[index] -= count
-        if self.tiles[index] < 0:
+        self.tiles[color.value] -= count
+        if self.tiles[color.value] < 0:
             print("Removed tiles that didn't exist: ", color, count)
             exit(0)
     

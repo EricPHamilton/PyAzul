@@ -2,19 +2,23 @@ import sys
 
 sys.path.append('..')
 from Game import Game
-from .AzulLogic import Board
+from .AzulLogic import AzulBoard
 import random
 import numpy as np
 import itertools
-from sympy.utilities.iterables import multiset_permutations
 
 class AzulGame(Game):
 
-    def __init__(self):
+    def __init__(self, shouldRandomize: bool):
         self.rand = random.Random()
+        self.shouldRandomize = shouldRandomize
+
 
     def getInitBoard(self):
-        board = Board().convertToArray()
+        boardObj = AzulBoard()
+        if self.shouldRandomize:
+            boardObj.fillWallsRandomly(random.uniform(0.75, 0.75))
+        board = boardObj.convertToArray()
         return board
 
     def getBoardSize(self):
@@ -38,12 +42,12 @@ class AzulGame(Game):
             nextPlayer: player who plays in the next turn (should be -player)
         """
         # will need to check for white tile at end of rounds
-        boardObj = Board.convertFromArray(board)
+        boardObj = AzulBoard.convertFromArray(board)
 
         newBoard = boardObj.getNextState(player, action)
         return (newBoard.convertToArray(), -player)
 
-    def getValidMoves(self, board: Board, player: int):
+    def getValidMoves(self, board: AzulBoard, player: int):
         """
         Input:
             board: current board
@@ -53,12 +57,7 @@ class AzulGame(Game):
                         moves that are valid from the current board and player,
                         0 for invalid moves
         """
-        boardObj = Board.convertFromArray(board)
-
-        arr2 = boardObj.convertToArray()
-        if not np.array_equal(board, arr2):
-            print("There was a mistake converting from arr -> board")
-            exit(-2)
+        boardObj = AzulBoard.convertFromArray(board)
 
         moves = []
         for i in range(180):
@@ -80,7 +79,7 @@ class AzulGame(Game):
                small non-zero value for draw.
                
         """
-        boardObj = Board.convertFromArray(board)
+        boardObj = AzulBoard.convertFromArray(board)
         if boardObj.roundFinished:
             if player == 1:
                 curPlayer = boardObj.player1
@@ -162,6 +161,6 @@ class AzulGame(Game):
 
     @staticmethod
     def display(board):
-        boardObj = Board.convertFromArray(board)
+        boardObj = AzulBoard.convertFromArray(board)
         boardObj.display()
     

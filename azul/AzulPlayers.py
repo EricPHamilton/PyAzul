@@ -21,7 +21,7 @@ class HumanAzulPlayer():
         valid = self.game.getValidMoves(board, 1)
 
         while True:
-            source = int(input("Take tiles from: "))
+            source = input("Take tiles from: ")
             if source == 'c':
                 source = 5
             else:
@@ -30,7 +30,7 @@ class HumanAzulPlayer():
             color = int(input("Color: "))
             color = color - 1
 
-            line = int(input("What line to place on: "))
+            line = input("What line to place on: ")
             if line == 'f':
                 line = 5
             else:
@@ -40,6 +40,7 @@ class HumanAzulPlayer():
             actionInt = action.getActionInt()
 
             if valid[actionInt] == 1:
+                print("---------------------------------------------------------")
                 return actionInt
             else:
                 print("attempted invalid move. try again.")

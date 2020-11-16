@@ -7,7 +7,7 @@ from .AzulAction import AzulAction
 import random
 import numpy as np
 
-class Board():
+class AzulBoard():
     def __init__(self):
         self.player1 = Player(1)
         self.player2 = Player(-1)
@@ -18,9 +18,9 @@ class Board():
 
     def display(self):
         print("---------------------------------------------------------")
-        #self.bag.display()
-        #self.lid.display()
-        #print()
+        self.bag.display()
+        self.lid.display()
+        
         self.center.display()
         print()
         self.player1.display()
@@ -30,6 +30,21 @@ class Board():
     
     def toString(self):
         return self.bag.toString() + self.lid.toString() + self.center.toString() + self.player1.toString() + self.player2.toString()
+
+    def fillWallsRandomly(self, prob: float):
+        self.player1.wall.cells = self.getValidRandomWall(prob)
+        self.player2.wall.cells = self.getValidRandomWall(prob)
+    
+    def getValidRandomWall(self, prob: float):
+        valid = False
+        while not valid:
+            numpyWall = np.random.choice(a=[True, False], size=(5, 5), p = [prob, 1-prob])
+            valid = True
+            for line in numpyWall:
+                if line.all():
+                    valid = False
+            
+        return numpyWall.tolist()
 
     def getNextState(self, player, actionInt):
         action = self.decodeAction(player, actionInt)
@@ -102,20 +117,32 @@ class Board():
     def finishRound(self):
         self.roundFinished = True
 
-        tilesToBag = self.player1.finishRound()
-        self.player1.floorLine.tileCollection.moveAllTiles(self.lid)
+        #print("Before:")
+        #print(self.player1.wall.toString()[:-1])
+        #print("floor:", self.player1.floorLine.tileCollection.getCount())
+        (tilesToBag, tilesToLid) = self.player1.finishRound()
         tilesToBag.moveAllTiles(self.bag.tiles)
-        
-        tilesToBag = self.player2.finishRound()
-        self.player2.floorLine.tileCollection.moveAllTiles(self.lid)
-        tilesToBag.moveAllTiles(self.bag.tiles)
-
-        #print("Player 1 wall:", str(self.player1.score), "points.")
+        tilesToLid.moveAllTiles(self.lid)
+        #print("After:", str(self.player1.score), "points.")
         #print(self.player1.wall.toString())
-        #print("Player 2 wall:", str(self.player2.score), "points.")
+        
+        #print("Before")
+        #print(self.player2.wall.toString()[:-1])
+        #print("floor:", self.player2.floorLine.tileCollection.getCount())
+        (tilesToBag, tilesToLid) = self.player2.finishRound()
+        tilesToBag.moveAllTiles(self.bag.tiles)
+        tilesToLid.moveAllTiles(self.lid)
+        #print("After:", str(self.player2.score), "points.")
         #print(self.player2.wall.toString())
         #TODO need to indicate that player w/ white tile goes first
     
+    def setupNextRound(self):
+        self.roundFinished = False
+        self.center = Center(self.bag)
+
+    def isGameFinished(self):
+        return self.player1.wall.hasFinishedRow() or self.player2.wall.hasFinishedRow()
+
     # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
     def convertToArray(self):
         arr = np.zeros((25, 6))
@@ -137,18 +164,13 @@ class Board():
         for i in range(5):
             arr[24][i + 1] = -2
 
-        '''board2 = Board.convertFromArray(arr)
-        if self.toString() != board2.toString():
-            print("There was a mistake converting from board -> arr")
-            exit(-2)'''
-
         return arr
     
     # More ugly. Now we need to create board given the array output from convertToArray...
     @staticmethod
     def convertFromArray(arr):
         arr = arr.astype(int)
-        retBoard = Board()
+        retBoard = AzulBoard()
         for i in range(5):
             retBoard.center.factories[i].tiles = TileCollection.getFromArray(arr[i])
         retBoard.center.center = TileCollection.getFromArray(arr[5])
@@ -157,12 +179,6 @@ class Board():
         retBoard.player1 = Player.getFromArray(arr[8:16])
         retBoard.player2 = Player.getFromArray(arr[16:24])
         retBoard.roundFinished = bool(arr[24][0])
-
-        '''arr2 = retBoard.convertToArray()
-        if not np.array_equal(arr, arr2):
-            print("There was a mistake converting from arr -> board")
-            exit(-2)
-        '''
 
         return retBoard
 

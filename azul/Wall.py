@@ -115,5 +115,14 @@ class Wall:
     def isCellFilled(self, line, color):
         return self.cells[line][Wall.getIndexOfColorInRow(line, color)]
     
+    def hasFinishedRow(self) -> bool:
+        for i in range(5):
+            onlyTrue = True
+            for j in range(5):
+                if self.cells[i][j] == False:
+                    onlyTrue = False
+            if onlyTrue:
+                return True
+        return False
 
                 

@@ -16,7 +16,7 @@ class PlayerLines():
             if (self.lines[i][2] == 0): 
                 countColorString = "None"
             else:
-                countColorString = str(self.lines[i][2]) + " " + self.lines[i][1].name
+                countColorString = str(self.lines[i][2]) + " " + self.lines[i][1].name[0:3]
             string += ("Line " + str(i + 1) + ": ") + countColorString + "\n"
         return string[:-1]
     

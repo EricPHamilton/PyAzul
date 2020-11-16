@@ -1,11 +1,12 @@
 import logging
 
 from tqdm import tqdm
+from .AzulLogic import AzulBoard
 
 log = logging.getLogger(__name__)
 
 
-class Arena():
+class AzulArena():
     """
     An Arena class where any 2 agents can be pit against each other.
     """
@@ -27,7 +28,7 @@ class Arena():
         self.game = game
         self.display = display
 
-    def playGame(self, verbose=False):
+    def playRound(self, board, verbose=False) -> AzulBoard:
         """
         Executes one episode of a game.
 
@@ -39,7 +40,6 @@ class Arena():
         """
         players = [self.player2, None, self.player1]
         curPlayer = 1
-        board = self.game.getInitBoard()
         it = 0
         while self.game.getGameEnded(board, curPlayer) == 0:
             it += 1
@@ -56,45 +56,38 @@ class Arena():
                 log.debug(f'valids = {valids}')
                 assert valids[action] > 0
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
+            if verbose:
+                tempBoard = AzulBoard()
+                actionObj = tempBoard.decodeAction(curPlayer, action)
+                print(actionObj.getTurnExplanationString())
         if verbose:
             assert self.display
-            print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
+            print("Round over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
-        return curPlayer * self.game.getGameEnded(board, curPlayer)
+        return AzulBoard.convertFromArray(board)
 
-    def playGames(self, num, verbose=False):
+    def playFullGame(self, verbose=False):
         """
-        Plays num games in which player1 starts num/2 games and player2 starts
-        num/2 games.
+        Plays a full game of Azul, comprised of many rounds.
 
         Returns:
             oneWon: games won by player1
             twoWon: games won by player2
             draws:  games won by nobody
         """
+        board = None
+        gameIsFinished = False
 
-        num = int(num / 2)
-        oneWon = 0
-        twoWon = 0
-        draws = 0
-        for _ in tqdm(range(num), desc="Arena.playGames (1)"):
-            gameResult = self.playGame(verbose=verbose)
-            if gameResult == 1:
-                oneWon += 1
-            elif gameResult == -1:
-                twoWon += 1
+        while not gameIsFinished:
+            if board is None:
+                board = self.game.getInitBoard()
             else:
-                draws += 1
+                boardObj = AzulBoard.convertFromArray(board)
+                boardObj.setupNextRound()
+                board = boardObj.convertToArray()
 
-        self.player1, self.player2 = self.player2, self.player1
+            newBoard = self.playRound(board, verbose=verbose)
+            gameIsFinished = newBoard.isGameFinished()
+            board = newBoard.convertToArray()
 
-        for _ in tqdm(range(num), desc="Arena.playGames (2)"):
-            gameResult = self.playGame(verbose=verbose)
-            if gameResult == -1:
-                oneWon += 1
-            elif gameResult == 1:
-                twoWon += 1
-            else:
-                draws += 1
 
-        return oneWon, twoWon, draws
