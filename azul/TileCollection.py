@@ -11,6 +11,9 @@ class TileCollection():
     def display(self):
         print("Lid:",self.tiles)
     
+    def clear(self):
+        self.tiles = [0, 0, 0, 0, 0, 0]
+    
     def toString(self):
         return str(self.tiles)
     

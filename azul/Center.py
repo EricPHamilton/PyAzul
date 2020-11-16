@@ -48,11 +48,10 @@ class Center():
             isCenter = True
             sourceCollection = self.center
         
-        color = TileColor(action.color)
-        count = sourceCollection.getCountOfColor(color)
+        count = sourceCollection.getCountOfColor(action.color)
         retCollection = TileCollection(0, 0, 0, 0, 0, 0)
-        retCollection.addTiles(color, count)
-        sourceCollection.removeTiles(color, count)
+        retCollection.addTiles(action.color, count)
+        sourceCollection.removeTiles(action.color, count)
 
         if isCenter:
             # check for white tile

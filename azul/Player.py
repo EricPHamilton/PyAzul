@@ -49,7 +49,9 @@ class Player:
 
         tilesToLid = self.floorLine.tileCollection.copy()
         tilesToLid.setCountOfColor(TileColor.WHITE, 0)
+        self.floorLine.tileCollection.clear()
         
+        #TODO need to do max(score WITHOUT bonus, 0), then apply bonus.
         self.score = max(wallScore + floorScore, 0)
         return (tilesToBag, tilesToLid)
 
@@ -60,18 +62,17 @@ class Player:
             tiles.removeTiles(TileColor.WHITE, 1)
         
         # Place the rest of the tiles on the chosen line
-        color = TileColor(action.color)
-        count = tiles.getCountOfColor(color)
+        count = tiles.getCountOfColor(action.color)
         if action.line < 5:
-            overflowForFloorLine = self.playerLines.placeTiles(action.line, color, count)
+            overflowForFloorLine = self.playerLines.placeTiles(action.line, action.color, count)
             count = overflowForFloorLine.getCount()
             tiles = overflowForFloorLine
 
         # add to floor line and calc overflow for lid
         overflowNum = max((self.floorLine.tileCollection.getCount() + count) - 7, 0)
         overflowCollection = TileCollection(0, 0, 0, 0, 0, 0)
-        overflowCollection.addTiles(color, overflowNum)
-        tiles.removeTiles(color, overflowNum)
+        overflowCollection.addTiles(action.color, overflowNum)
+        tiles.removeTiles(action.color, overflowNum)
         tiles.moveAllTiles(self.floorLine.tileCollection)
         return overflowCollection
     

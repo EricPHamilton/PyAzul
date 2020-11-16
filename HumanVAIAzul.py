@@ -7,7 +7,6 @@ from azul.AzulArena import AzulArena
 import cProfile, pstats, io
 from pstats import SortKey
 
-
 import numpy as np
 from utils import *
 
