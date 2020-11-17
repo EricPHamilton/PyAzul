@@ -40,7 +40,10 @@ class AzulArena():
                 draw result returned from the game that is neither 1, -1, nor 0.
         """
         players = [self.player2, None, self.player1]
-        curPlayer = 1
+        curPlayer = AzulBoard.convertFromArray(board).playerIDWhoHadWhiteLastRound
+        if curPlayer == 0:
+            curPlayer = 1
+            
         it = 0
         while self.game.getGameEnded(board, curPlayer) == 0:
             it += 1

@@ -15,6 +15,7 @@ class AzulBoard():
         self.lid = TileCollection(0, 0, 0, 0, 0, 0)
         self.center = Center(self.bag, self.lid)
         self.roundFinished = False
+        self.playerIDWhoHadWhiteLastRound = 0
 
     def display(self):
         print("---------------------------------------------------------")
@@ -116,25 +117,24 @@ class AzulBoard():
     
     def finishRound(self):
         self.roundFinished = True
+        self.playerIDWhoHadWhiteLastRound = 0 # Reset 
 
-        #print("Before:")
-        #print(self.player1.wall.toString()[:-1])
-        #print("floor:", self.player1.floorLine.tileCollection.getCount())
+        # Track if player1 had white tile
+        if (self.player1.floorLine.tileCollection.getCountOfColor(TileColor.WHITE) > 0):
+            self.playerIDWhoHadWhiteLastRound = self.player1.id
+
+        # move tiles to bag and lid
         (tilesToBag, tilesToLid) = self.player1.finishRound()
         tilesToBag.moveAllTiles(self.bag.tiles)
         tilesToLid.moveAllTiles(self.lid)
-        #print("After:", str(self.player1.score), "points.")
-        #print(self.player1.wall.toString())
-        
-        #print("Before")
-        #print(self.player2.wall.toString()[:-1])
-        #print("floor:", self.player2.floorLine.tileCollection.getCount())
+
+        if (self.player2.floorLine.tileCollection.getCountOfColor(TileColor.WHITE) > 0):
+            self.playerIDWhoHadWhiteLastRound = self.player2.id
+
         (tilesToBag, tilesToLid) = self.player2.finishRound()
         tilesToBag.moveAllTiles(self.bag.tiles)
         tilesToLid.moveAllTiles(self.lid)
-        #print("After:", str(self.player2.score), "points.")
-        #print(self.player2.wall.toString())
-        #TODO need to indicate that player w/ white tile goes first
+
     
     def setupNextRound(self):
         self.roundFinished = False
@@ -174,8 +174,9 @@ class AzulBoard():
             arr[16 + i] = player2Arr[i]
         
         arr[24][0] = int(self.roundFinished)
-        for i in range(5):
-            arr[24][i + 1] = -2
+        arr[24][1] = self.playerIDWhoHadWhiteLastRound
+        for i in range(4):
+            arr[24][i + 2] = -2
 
         return arr
     
@@ -192,6 +193,7 @@ class AzulBoard():
         retBoard.player1 = Player.getFromArray(arr[8:16])
         retBoard.player2 = Player.getFromArray(arr[16:24])
         retBoard.roundFinished = bool(arr[24][0])
+        retBoard.playerIDWhoHadWhiteLastRound = int(arr[24][1])
 
         return retBoard
 
