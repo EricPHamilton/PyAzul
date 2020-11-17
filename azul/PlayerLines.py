@@ -38,4 +38,11 @@ class PlayerLines():
         retCollection = TileCollection(0, 0, 0, 0, 0, 0)
         retCollection.addTiles(color, overflowCount)
         return retCollection
+    
+    def getAllTiles(self) -> TileCollection:
+        tiles = TileCollection(0, 0, 0, 0, 0, 0)
+        for line in self.lines:
+            if line[1] is not None:
+                tiles.addTiles(line[1], line[2])
+        return tiles
         

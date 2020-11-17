@@ -2,6 +2,7 @@ import logging
 
 from tqdm import tqdm
 from .AzulLogic import AzulBoard
+from .TileCollection import TileCollection
 
 log = logging.getLogger(__name__)
 
@@ -64,6 +65,12 @@ class AzulArena():
             assert self.display
             print("Round over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
+        
+        retBoard = AzulBoard.convertFromArray(board)
+        if  retBoard.getAllTiles().equals(TileCollection(20, 20, 20, 20, 20, 1)):
+            print("Gained or lost a tile somewhere!")
+            exit(-3)
+
         return AzulBoard.convertFromArray(board)
 
     def playFullGame(self, verbose=False):

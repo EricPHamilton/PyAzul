@@ -32,7 +32,7 @@ class Player:
         print("Floor line:", self.floorLine.tileCollection.getCount())
     
     def finishRound(self) -> tuple:
-        wallScore = 0
+        wallScore = [0, 0] # First is "standard score", second is "bonus" score.
         floorScore = self.floorLine.getScore()
         tilesToBag = TileCollection(0, 0, 0, 0, 0, 0)
 
@@ -40,19 +40,19 @@ class Player:
             color = line[1]
             if color != None:
                 if line[0] == line[2]:
-                    wallScore += self.wall.addTile(line[0] - 1, color)
+                    scores = self.wall.addTile(line[0] - 1, color)
+                    wallScore[0] += scores[0]
+                    wallScore[1] += scores[1] 
+
                     tilesToBag.addTiles(color, line[0] - 1) # We moved one tile to the wall, so it's num - 1.
                     line[1] = None
                     line[2] = 0
-                else:
-                    tilesToBag.addTiles(color, line[2])
 
         tilesToLid = self.floorLine.tileCollection.copy()
         tilesToLid.setCountOfColor(TileColor.WHITE, 0)
         self.floorLine.tileCollection.clear()
         
-        #TODO need to do max(score WITHOUT bonus, 0), then apply bonus.
-        self.score = max(wallScore + floorScore, 0)
+        self.score += max(wallScore[0] + floorScore, 0) + wallScore[1]
         return (tilesToBag, tilesToLid)
 
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:
@@ -98,6 +98,13 @@ class Player:
                     arr[3 + i][j] = int(self.wall.cells[i][j])
         
         return arr
+    
+    def getAllTiles(self):
+        tiles = TileCollection(0, 0, 0, 0, 0, 0)
+        tiles.addTilesFromCollection(self.floorLine.tileCollection)
+        tiles.addTilesFromCollection(self.playerLines.getAllTiles())
+        tiles.addTilesFromCollection(self.wall.getAllTiles())
+        return tiles
 
     @staticmethod
     def getFromArray(arr):

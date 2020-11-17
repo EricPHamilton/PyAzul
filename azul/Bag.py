@@ -8,7 +8,7 @@ class Bag():
         self.rand = random.Random()
             
     def pickRandomTiles(self, count):
-        return self.tiles.pickRandomTiles(4, self.rand)
+        return self.tiles.pickRandomTiles(count, self.rand)
 
     def display(self):
         print(self.toString())

@@ -1,4 +1,5 @@
 from .TileColor import TileColor
+from .TileCollection import TileCollection
 
 class Wall:
     def __init__(self):
@@ -38,43 +39,55 @@ class Wall:
         
         return None
 
-    def isColorComplete(self, color) -> bool:
+    def getCountOfColor(self, color) -> int:
+        ctr = 0
         for row in range(5):
             col = self.getIndexOfColorInRow(row, color)
-            if self.cells[row][col] == False:
-                return False
+            if self.cells[row][col] == True:
+                ctr += 1
         
-        return True
+        return ctr
 
-    def addTile(self, rowIndex, color) -> int:
+    def isColorComplete(self, color) -> bool:
+        return self.getCountOfColor(color) == 5
+
+    def getAllTiles(self) -> TileCollection:
+        return TileCollection(self.getCountOfColor(TileColor.BLUE), self.getCountOfColor(TileColor.YELLOW), self.getCountOfColor(TileColor.RED), self.getCountOfColor(TileColor.BLUE), self.getCountOfColor(TileColor.CYAN), 0)
+
+    # Returns scores from function getScoresForCell.
+    def addTile(self, rowIndex, color) -> tuple:
         row = rowIndex
         col = self.getIndexOfColorInRow(row, color)
         self.cells[row][col] = True
 
-        return self.getScoreForCell(row, col)
+        return self.getScoresForCell(row, col)
 
-    def getScoreForCell(self, row, col) -> int:
-        score = 0
+    # Returns two scores in a 2-cell array - [normalScore, bonusScore]
+    # normal score is normal score for placing tile.
+    # bonus score is points you're awarded at the end of the game (that we apply immediately so model prioritizes completing these)
+    def getScoresForCell(self, row, col) -> tuple:
+        normalScore = 0
+        bonusScore = 0
         hori = self.getHorizontalLinkCount(row, col)
         vert = self.getVerticalLinkCount(row, col)        
 
         if hori == 1 and vert == 1: # Singleton tile. 1 pt.
-            score += 1
+            normalScore += 1
         elif hori == 1 or vert == 1: # Row/Col of tiles. X points 
-            score += (max(hori, vert))
+            normalScore += (max(hori, vert))
         else:
-            score += (hori + vert) # cross of tiles. Hori + Vert points.
+            normalScore += (hori + vert) # cross of tiles. Hori + Vert points.
         
         if hori == 5: # Finished row. +2
-            score += 2
+            bonusScore += 2
         
         if vert == 5: # Finished col. +7
-            score += 7
+            bonusScore += 7
         
         if self.isColorComplete(self.getColorGrid()[row][col]): # Finished color. +10
-            score += 10
+            bonusScore += 10
         
-        return score
+        return (normalScore, bonusScore)
 
     def getHorizontalLinkCount(self, row, col) -> int:
         trackCol = col

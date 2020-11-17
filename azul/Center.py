@@ -4,10 +4,10 @@ from .AzulAction import AzulAction
 from .TileColor import TileColor
 
 class Center():
-    def __init__(self, bag):
+    def __init__(self, bag, lid):
         self.factories = []
         for _ in range(5):
-            self.factories.append(Factory(bag))
+            self.factories.append(Factory(bag, lid))
 
         # Start with a white tile in the center
         self.center = TileCollection(0, 0, 0, 0, 0, 1) 

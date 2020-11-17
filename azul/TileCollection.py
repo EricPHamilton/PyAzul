@@ -7,6 +7,9 @@ class TileCollection():
 
     def copy(self):
         return TileCollection(self.tiles[0], self.tiles[1], self.tiles[2], self.tiles[3], self.tiles[4], self.tiles[5])
+    
+    def equals(self, col):
+        return self.tiles == col.tiles
 
     def display(self):
         print("Lid:",self.tiles)
@@ -46,6 +49,10 @@ class TileCollection():
 
     def addTiles(self, color, count):
         self.tiles[color.value] += count
+    
+    def addTilesFromCollection(self, collection):
+        for i in range(6):
+            self.tiles[i] += collection.tiles[i]
 
     def removeTiles(self, color, count):
         self.tiles[color.value] -= count
@@ -53,10 +60,11 @@ class TileCollection():
             print("Removed tiles that didn't exist: ", color, count)
             exit(0)
     
-    def moveAllTiles(self, location):
+    # Moves all tiles in this collection to a destination
+    def moveAllTiles(self, dest):
         for color in TileColor:
             count = self.getCountOfColor(color)
-            location.addTiles(color, count)
+            dest.addTiles(color, count)
             self.removeTiles(color, count)
     
     def getArray(self):

@@ -12,8 +12,8 @@ class AzulBoard():
         self.player1 = Player(1)
         self.player2 = Player(-1)
         self.bag = Bag()
-        self.center = Center(self.bag)
         self.lid = TileCollection(0, 0, 0, 0, 0, 0)
+        self.center = Center(self.bag, self.lid)
         self.roundFinished = False
 
     def display(self):
@@ -138,10 +138,23 @@ class AzulBoard():
     
     def setupNextRound(self):
         self.roundFinished = False
-        self.center = Center(self.bag)
+        self.center = Center(self.bag, self.lid)
 
     def isGameFinished(self):
         return self.player1.wall.hasFinishedRow() or self.player2.wall.hasFinishedRow()
+    
+    def getAllTiles(self):
+        # Created as a sanity check. Make sure there are 20/20/20/20/20/1 tiles in the game at all times.
+        # only intended to be used at the end of the round (center/factories empty)
+
+        sumTiles = TileCollection(0, 0, 0, 0, 0, 0)
+        sumTiles.addTilesFromCollection(self.bag.tiles)
+        sumTiles.addTilesFromCollection(self.lid)
+        sumTiles.addTilesFromCollection(self.player1.getAllTiles())
+        sumTiles.addTilesFromCollection(self.player2.getAllTiles())
+
+        return sumTiles
+
 
     # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
     def convertToArray(self):

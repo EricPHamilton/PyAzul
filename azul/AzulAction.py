@@ -31,4 +31,4 @@ class AzulAction:
         else:
             line = "the floor line"
 
-        return str(f"Player took {self.color.name} tiles from {source} and put them on {line}")
+        return str(f"Player {self.playerID} took {self.color.name} tiles from {source} and put them on {line}")

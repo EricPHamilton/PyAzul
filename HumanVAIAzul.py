@@ -32,10 +32,14 @@ n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
 player2 = n2p  # Player 2 is neural network if it's cpu vs cpu.
 
-if randPlayers:
-    arena = AzulArena(rp1, rp2, g, display=AzulGame.display)
-else:
-    arena = AzulArena(hp, player2, g, display=AzulGame.display)
+numberGames = 1
+verbose = True
 
-print(arena.playFullGame(verbose=True))
+for _ in range(numberGames):
+    if randPlayers:
+        arena = AzulArena(rp1, rp2, g, display=AzulGame.display)
+    else:
+        arena = AzulArena(hp, player2, g, display=AzulGame.display)
+
+    print(arena.playFullGame(verbose=verbose))
 
