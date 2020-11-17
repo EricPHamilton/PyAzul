@@ -57,8 +57,15 @@ class TileCollection():
     def removeTiles(self, color, count):
         self.tiles[color.value] -= count
         if self.tiles[color.value] < 0:
-            print("Removed tiles that didn't exist: ", color, count)
+            print("Removed tiles that didn't exist:", color, count)
             exit(0)
+    
+    def removeTilesFromCollection(self, collection):
+        for i in range(6):
+            self.tiles[i] -= collection.tiles[i]
+            if (self.tiles[i] < 0):
+                print("Removed tiles that didn't exist:", collection, i)
+                exit(1)
     
     # Moves all tiles in this collection to a destination
     def moveAllTiles(self, dest):

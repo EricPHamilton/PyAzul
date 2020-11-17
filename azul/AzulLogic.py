@@ -6,6 +6,7 @@ from .TileColor import TileColor
 from .AzulAction import AzulAction
 import random
 import numpy as np
+import math
 
 class AzulBoard():
     def __init__(self):
@@ -46,6 +47,37 @@ class AzulBoard():
                     valid = False
             
         return numpyWall.tolist()
+    
+    def fillPlayerLinesRandomly(self, bag, lineHasTilesProb: float):
+        self.player1.playerLines.lines = self.getValidRandomPlayerLines(bag, self.player1, lineHasTilesProb)
+        self.player2.playerLines.lines = self.getValidRandomPlayerLines(bag, self.player2, lineHasTilesProb)
+
+    def getValidRandomPlayerLines(self, bag, player, lineHasTilesProb: float):
+        lines = []
+        for i in range(5):
+            addSomeTiles = np.random.uniform(0, 1) < lineHasTilesProb
+            if addSomeTiles:
+                validColors = player.wall.getValidColorsForRow(i)
+                color = np.random.choice(validColors)
+                number = min(np.random.randint(0, i + 1), bag.tiles.getCountOfColor(color)) # Don't remove tiles we don't have in the bag.
+                if number == 0:
+                    color = None
+                else:
+                    bag.tiles.removeTiles(color, number)
+            else:
+                color = None
+                number = 0
+
+            lines.append([i + 1, color, number])
+        
+        return lines
+        '''        self.lines = []
+        self.lines.append([1, None, 0])
+        self.lines.append([2, None, 0])
+        self.lines.append([3, None, 0])
+        self.lines.append([4, None, 0])
+        self.lines.append([5, None, 0])'''
+
 
     def getNextState(self, player, actionInt):
         action = self.decodeAction(player, actionInt)
@@ -145,13 +177,14 @@ class AzulBoard():
     
     def getAllTiles(self):
         # Created as a sanity check. Make sure there are 20/20/20/20/20/1 tiles in the game at all times.
-        # only intended to be used at the end of the round (center/factories empty)
 
         sumTiles = TileCollection(0, 0, 0, 0, 0, 0)
         sumTiles.addTilesFromCollection(self.bag.tiles)
         sumTiles.addTilesFromCollection(self.lid)
         sumTiles.addTilesFromCollection(self.player1.getAllTiles())
         sumTiles.addTilesFromCollection(self.player2.getAllTiles())
+        sumTiles.addTilesFromCollection(self.center.getAllTiles())
+
 
         return sumTiles
 

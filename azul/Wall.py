@@ -137,5 +137,15 @@ class Wall:
             if onlyTrue:
                 return True
         return False
+    
+    def getValidColorsForRow(self, line):
+        validColors = []
+        for i in range(5):
+            color = TileColor(i)
+            if self.isCellFilled(line, color) == False:
+                validColors.append(color)
+            
+        return validColors
+
 
                 

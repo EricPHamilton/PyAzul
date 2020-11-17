@@ -17,7 +17,7 @@ any agent.
 
 randPlayers = True
 
-g = AzulGame(shouldRandomize=False)
+g = AzulGame(shouldRandomize=True)
 
 # all players
 hp = HumanAzulPlayer(g).play
@@ -36,7 +36,7 @@ n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
 player2 = n2p  # Player 2 is neural network if it's cpu vs cpu.
 
-numberGames = 1
+numberGames = 100
 verbose = True
 
 for _ in range(numberGames):

@@ -63,6 +63,13 @@ class Center():
             sourceCollection.moveAllTiles(self.center)
 
         return retCollection
+    
+    def getAllTiles(self) -> TileCollection:
+        sumTiles = TileCollection(0, 0, 0, 0, 0, 0)
+        sumTiles.addTilesFromCollection(self.center)
+        for i in range(5):
+            sumTiles.addTilesFromCollection(self.factories[i].tiles)
+        return sumTiles
 
 
         

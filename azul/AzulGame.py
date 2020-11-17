@@ -3,6 +3,7 @@ import sys
 sys.path.append('..')
 from Game import Game
 from .AzulLogic import AzulBoard
+from .TileCollection import TileCollection
 import random
 import numpy as np
 import itertools
@@ -17,7 +18,19 @@ class AzulGame(Game):
     def getInitBoard(self):
         boardObj = AzulBoard()
         if self.shouldRandomize:
-            boardObj.fillWallsRandomly(random.uniform(0.75, 0.75))
+            boardObj.fillWallsRandomly(random.uniform(0, 0.75))
+            tilesOnPlayerWalls = TileCollection(0, 0, 0, 0, 0, 0)
+            tilesOnPlayerWalls.addTilesFromCollection(boardObj.player1.wall.getAllTiles())
+            tilesOnPlayerWalls.addTilesFromCollection(boardObj.player2.wall.getAllTiles())
+            boardObj.bag.tiles.removeTilesFromCollection(tilesOnPlayerWalls)
+
+            boardObj.fillPlayerLinesRandomly(boardObj.bag, random.uniform(0, 0.5))
+        
+            allTiles = boardObj.getAllTiles()
+            if not allTiles.equals(TileCollection(20, 20, 20, 20, 20, 1)):
+                print ("Tile Randomization failed.")
+                system.exit(3)
+            
         board = boardObj.convertToArray()
         return board
 
