@@ -23,9 +23,13 @@ g = AzulGame(shouldRandomize=False)
 hp = HumanAzulPlayer(g).play
 rp1 = RandomPlayer(g).play
 rp2 = RandomPlayer(g).play
-
 n2 = NNet(g)
-n2.load_checkpoint('./temp/', 'best.pth.tar')
+
+loadCheckpoint = False
+
+if loadCheckpoint:
+    n2.load_checkpoint('./temp/', 'best.pth.tar')
+    
 args2 = dotdict({'numMCTSSims': 50, 'cpuct': 1.0})
 mcts2 = MCTS(g, n2, args2)
 n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
@@ -41,5 +45,4 @@ for _ in range(numberGames):
     else:
         arena = AzulArena(hp, player2, g, display=AzulGame.display)
 
-    print(arena.playFullGame(verbose=verbose))
-
+    arena.playFullGame(verbose=verbose)

@@ -145,17 +145,13 @@ class AzulGame(Game):
                        form of the board and the corresponding pi vector. This
                        is used when training the neural network from examples.
         """
-        # Azul has no symmetries :(
 
         # Only symmetries are ALL permutations of the factory squares. Uh oh.
         # Commenting out for now. Not sure how to permute the pi vector :(
-        '''baseSet = []
-        for i in range(5):
-            baseSet.append(list(board[i].astype(int)))
-        perms = list(multiset_permutations(baseSet))
 
-        retExamples = 
-        for perm in perms:'''
+        '''perm = permutations([0, 1, 2, 3, 4])
+            for i in list(perm):
+                print(i)'''
 
         return [(board, pi)]
 
