@@ -2,14 +2,22 @@ from .TileColor import TileColor
 from .TileCollection import TileCollection
 
 class Wall:
+    colorGrid = [
+        [TileColor.BLUE, TileColor.YELLOW, TileColor.RED, TileColor.BLACK, TileColor.CYAN],
+        [TileColor.CYAN, TileColor.BLUE, TileColor.YELLOW, TileColor.RED, TileColor.BLACK],
+        [TileColor.BLACK, TileColor.CYAN, TileColor.BLUE, TileColor.YELLOW, TileColor.RED],
+        [TileColor.RED, TileColor.BLACK, TileColor.CYAN, TileColor.BLUE, TileColor.YELLOW],
+        [TileColor.YELLOW, TileColor.RED, TileColor.BLACK, TileColor.CYAN, TileColor.BLUE]
+    ]
+
     def __init__(self):
         self.cells = [[False] * 5 for i in range(5)]
     
-    def display(self):
+    def display(self) -> None:
         print("WALL:")
         print(self.toString())
     
-    def toString(self):
+    def toString(self) -> str:
         string = ""
         for i in range(5):
             line = ""
@@ -20,20 +28,13 @@ class Wall:
         return string
 
     @staticmethod
-    def getColorGrid():
-        return [
-            [TileColor.BLUE, TileColor.YELLOW, TileColor.RED, TileColor.BLACK, TileColor.CYAN],
-            [TileColor.CYAN, TileColor.BLUE, TileColor.YELLOW, TileColor.RED, TileColor.BLACK],
-            [TileColor.BLACK, TileColor.CYAN, TileColor.BLUE, TileColor.YELLOW, TileColor.RED],
-            [TileColor.RED, TileColor.BLACK, TileColor.CYAN, TileColor.BLUE, TileColor.YELLOW],
-            [TileColor.YELLOW, TileColor.RED, TileColor.BLACK, TileColor.CYAN, TileColor.BLUE]
-        ]
+    def getColorGrid() -> list:
+        return Wall.colorGrid
 
     @staticmethod
-    def getIndexOfColorInRow(rowIndex, color):
-        colors = Wall.getColorGrid()
-        row = colors[rowIndex]
-        for i in range(len(row)):
+    def getIndexOfColorInRow(rowIndex, color) -> int:
+        row = Wall.colorGrid[rowIndex]
+        for i in range(5):
             if row[i] == color:
                 return i
         
@@ -51,9 +52,11 @@ class Wall:
     def isColorComplete(self, color) -> bool:
         return self.getCountOfColor(color) == 5
 
+    # Returns a tile collection of all tiles within the filled cells of the wall.
     def getAllTiles(self) -> TileCollection:
         return TileCollection(self.getCountOfColor(TileColor.BLUE), self.getCountOfColor(TileColor.YELLOW), self.getCountOfColor(TileColor.RED), self.getCountOfColor(TileColor.BLUE), self.getCountOfColor(TileColor.CYAN), 0)
 
+    # Adds a tile to the wall given row and color.
     # Returns scores from function getScoresForCell.
     def addTile(self, rowIndex, color) -> tuple:
         row = rowIndex
@@ -62,9 +65,9 @@ class Wall:
 
         return self.getScoresForCell(row, col)
 
-    # Returns two scores in a 2-cell array - [normalScore, bonusScore]
-    # normal score is normal score for placing tile.
-    # bonus score is points you're awarded at the end of the game (that we apply immediately so model prioritizes completing these)
+    # Returns a tuple of scores: (normalScore, bonusScore)
+    # Normal score is the score for placing the single tile.
+    # Bonus scores are 'special' points that are usually applied at the end of the game. Applied immediately for training.
     def getScoresForCell(self, row, col) -> tuple:
         normalScore = 0
         bonusScore = 0
@@ -125,20 +128,19 @@ class Wall:
         
         return count
 
-    def isCellFilled(self, line, color):
+    # Returns whether a cell of (line, color) is filled on the wall.
+    def isCellFilled(self, line, color) -> bool:
         return self.cells[line][Wall.getIndexOfColorInRow(line, color)]
     
+    # Returns if the wall has at least one 'complete' row.
     def hasFinishedRow(self) -> bool:
         for i in range(5):
-            onlyTrue = True
-            for j in range(5):
-                if self.cells[i][j] == False:
-                    onlyTrue = False
-            if onlyTrue:
+            if self.cells[i] == [True, True, True, True, True]:
                 return True
         return False
     
-    def getValidColorsForRow(self, line):
+    # Returns a list of colors that are not yet complete for a row.
+    def getValidColorsForRow(self, line) -> list:
         validColors = []
         for i in range(5):
             color = TileColor(i)

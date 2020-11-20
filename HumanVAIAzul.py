@@ -15,7 +15,7 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 
-randPlayers = False
+randPlayers = True
 
 g = AzulGame(shouldRandomize=False)
 
