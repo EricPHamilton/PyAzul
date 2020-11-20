@@ -160,13 +160,33 @@ class AzulGame(Game):
         """
 
         # Only symmetries are ALL permutations of the factory squares. Uh oh.
-        # Commenting out for now. Not sure how to permute the pi vector :(
+        
+        syms = [(board, pi)]
+        evalSyms = False #setting to false because it might be broke
+        if evalSyms:
+            perms = list(itertools.permutations([0, 1, 2, 3, 4]))
+            perms.pop(0) # current board
+            
+            indivLines = []
+            indivPolicies = []
+            for i in range(5):
+                indivLines.append(board[i])
+            
+            for i in range(6):
+                startInd = i * 30
+                indivPolicies.append(pi[startInd:startInd+30])
+            
 
-        '''perm = permutations([0, 1, 2, 3, 4])
-            for i in list(perm):
-                print(i)'''
+            for perm in list(perms):
+                newBoard = board.copy()
+                newPi = []
+                for i in range(5):
+                    newBoard[i] = indivLines[perm[i]]
+                    newPi.extend(indivPolicies[perm[i]])
+                newPi.extend(indivPolicies[5])
+                syms.append((newBoard, newPi))
 
-        return [(board, pi)]
+        return syms
 
     @staticmethod
     def display(board):
