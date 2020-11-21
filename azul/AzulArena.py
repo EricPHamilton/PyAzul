@@ -2,6 +2,7 @@ import logging
 
 from tqdm import tqdm
 from .AzulLogic import AzulBoard
+from .AzulAction import AzulAction
 from .TileCollection import TileCollection
 from .BoardConverter import BoardConverter
 
@@ -59,11 +60,13 @@ class AzulArena():
                 log.error(f'Action {action} is not valid!')
                 log.debug(f'valids = {valids}')
                 assert valids[action] > 0
-            board, curPlayer = self.game.getNextState(board, curPlayer, action)
+            
             if verbose:
-                tempBoard = AzulBoard()
-                actionObj = tempBoard.decodeAction(curPlayer, action)
+                actionObj = AzulAction.getActionFromInt(action, curPlayer)
                 print(actionObj.getTurnExplanationString())
+
+            board, curPlayer = self.game.getNextState(board, curPlayer, action)
+
         if verbose:
             assert self.display
             print("Round over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))

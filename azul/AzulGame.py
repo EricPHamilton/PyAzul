@@ -5,6 +5,7 @@ from Game import Game
 from .AzulLogic import AzulBoard
 from .TileCollection import TileCollection
 from .BoardConverter import BoardConverter
+from .AzulAction import AzulAction
 import random
 import numpy as np
 import itertools
