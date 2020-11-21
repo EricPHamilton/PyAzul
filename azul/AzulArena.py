@@ -3,9 +3,9 @@ import logging
 from tqdm import tqdm
 from .AzulLogic import AzulBoard
 from .TileCollection import TileCollection
+from .BoardConverter import BoardConverter
 
 log = logging.getLogger(__name__)
-
 
 class AzulArena():
     """
@@ -40,7 +40,7 @@ class AzulArena():
                 draw result returned from the game that is neither 1, -1, nor 0.
         """
         players = [self.player2, None, self.player1]
-        curPlayer = AzulBoard.convertFromArray(board).playerIDWhoHadWhiteLastRound
+        curPlayer = BoardConverter.createBoardFromArray(board).playerIDWhoHadWhiteLastRound
         if curPlayer == 0:
             curPlayer = 1
             
@@ -69,12 +69,12 @@ class AzulArena():
             print("Round over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
         
-        retBoard = AzulBoard.convertFromArray(board)
+        retBoard = BoardConverter.createBoardFromArray(board)
         if  retBoard.getAllTiles().equals(TileCollection(20, 20, 20, 20, 20, 1)):
             print("Gained or lost a tile somewhere!")
             exit(-3)
 
-        return AzulBoard.convertFromArray(board)
+        return BoardConverter.createBoardFromArray(board)
 
     def playFullGame(self, verbose=False):
         """
@@ -92,12 +92,12 @@ class AzulArena():
             if board is None:
                 board = self.game.getInitBoard()
             else:
-                boardObj = AzulBoard.convertFromArray(board)
+                boardObj = BoardConverter.createBoardFromArray(board)
                 boardObj.setupNextRound()
-                board = boardObj.convertToArray()
+                board = BoardConverter.createArrayFromBoard(boardObj)
 
             newBoard = self.playRound(board, verbose=verbose)
             gameIsFinished = newBoard.isGameFinished()
-            board = newBoard.convertToArray()
+            board = BoardConverter.createArrayFromBoard(newBoard)
 
 

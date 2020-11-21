@@ -63,8 +63,8 @@ class Player:
         
         # Place the rest of the tiles on the chosen line
         count = tiles.getCountOfColor(action.color)
-        if action.line < 5:
-            overflowForFloorLine = self.playerLines.placeTiles(action.line, action.color, count)
+        if action.dest < 5:
+            overflowForFloorLine = self.playerLines.placeTiles(action.dest, action.color, count)
             count = overflowForFloorLine.getCount()
             tiles = overflowForFloorLine
 

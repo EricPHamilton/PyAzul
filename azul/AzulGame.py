@@ -4,6 +4,7 @@ sys.path.append('..')
 from Game import Game
 from .AzulLogic import AzulBoard
 from .TileCollection import TileCollection
+from .BoardConverter import BoardConverter
 import random
 import numpy as np
 import itertools
@@ -11,9 +12,7 @@ import itertools
 class AzulGame(Game):
 
     def __init__(self, shouldRandomize: bool):
-        self.rand = random.Random()
         self.shouldRandomize = shouldRandomize
-
 
     def getInitBoard(self):
         boardObj = AzulBoard()
@@ -31,18 +30,18 @@ class AzulGame(Game):
                 print ("Tile Randomization failed.")
                 system.exit(3)
             
-        board = boardObj.convertToArray()
+        board = BoardConverter.createArrayFromBoard(boardObj)
         return board
 
     def getBoardSize(self):
         return (25, 6)
 
     def getActionSize(self):
-        numActionableColors = 5 # Blue, Yellow, Red, Black, Cyan
-        numTileLocations = 6    # 5 factories, 1 center
-        numPlayerRows = 6       # 5 pattern lines, 1 floor line
+        #numActionableColors = 5  ==> Blue, Yellow, Red, Black, Cyan
+        #numTileLocations = 6     ==> 5 factories, 1 center
+        #numPlayerRows = 6        ==> 5 pattern lines, 1 floor line
 
-        return numActionableColors * numTileLocations * numPlayerRows
+        return 180 # numActionableColors * numTileLocations * numPlayerRows
 
     def getNextState(self, board, player, action):
         """
@@ -54,11 +53,9 @@ class AzulGame(Game):
             nextBoard: board after applying action
             nextPlayer: player who plays in the next turn (should be -player)
         """
-        # will need to check for white tile at end of rounds
-        boardObj = AzulBoard.convertFromArray(board)
-
+        boardObj = BoardConverter.createBoardFromArray(board)
         newBoard = boardObj.getNextState(player, action)
-        return (newBoard.convertToArray(), -player)
+        return (BoardConverter.createArrayFromBoard(newBoard), -player)
 
     def getValidMoves(self, board: AzulBoard, player: int):
         """
@@ -70,10 +67,10 @@ class AzulGame(Game):
                         moves that are valid from the current board and player,
                         0 for invalid moves
         """
-        boardObj = AzulBoard.convertFromArray(board)
+        boardObj = BoardConverter.createBoardFromArray(board)
 
         moves = []
-        for i in range(180):
+        for i in range(self.getActionSize()):
             action = boardObj.decodeAction(player, i)
             if boardObj.isActionValid(action):
                 moves.append(1)
@@ -92,7 +89,7 @@ class AzulGame(Game):
                small non-zero value for draw.
                
         """
-        boardObj = AzulBoard.convertFromArray(board)
+        boardObj = BoardConverter.createBoardFromArray(board)
         if boardObj.roundFinished:
             if player == 1:
                 curPlayer = boardObj.player1
@@ -159,10 +156,10 @@ class AzulGame(Game):
                        is used when training the neural network from examples.
         """
 
-        # Only symmetries are ALL permutations of the factory squares. Uh oh.
+        # Only symmetries are ALL permutations of the factory rows.
         
         syms = [(board, pi)]
-        evalSyms = False #setting to false because it might be broke
+        evalSyms = False #setting to false because it might be broken
         if evalSyms:
             perms = list(itertools.permutations([0, 1, 2, 3, 4]))
             perms.pop(0) # current board
@@ -190,6 +187,6 @@ class AzulGame(Game):
 
     @staticmethod
     def display(board):
-        boardObj = AzulBoard.convertFromArray(board)
+        boardObj = BoardConverter.createBoardFromArray(board)
         boardObj.display()
     

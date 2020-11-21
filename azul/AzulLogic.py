@@ -103,11 +103,11 @@ class AzulBoard():
             return False
 
         # Quit if line is full or is already of another color 
-        if not actionPlayer.playerLines.isActionValid(action.color, action.line):
+        if not actionPlayer.playerLines.isActionValid(action.color, action.dest):
             return False
         
         # Quit if the wall tile associated with the line/color is filled
-        if action.line != 5 and actionPlayer.wall.isCellFilled(action.line, action.color):
+        if action.dest != 5 and actionPlayer.wall.isCellFilled(action.dest, action.color):
             return False
         
         return True
@@ -115,9 +115,6 @@ class AzulBoard():
     def executeAction(self, action: AzulAction):
         if not self.isActionValid(action):
             print("Attempted to execute an invalid action! Quitting with action:", action.toString())
-            #print("actionColor:", action.color, "lineColor:", self.getPlayerFromAction(action).playerLines.lines[action.line][1])
-            #action.playerID = -action.playerID
-            #print("Swap player:", self.isActionValid(action))
             exit(2)
 
         actionPlayer = self.getPlayerFromAction(action)
@@ -184,49 +181,4 @@ class AzulBoard():
         sumTiles.addTilesFromCollection(self.player2.getAllTiles())
         sumTiles.addTilesFromCollection(self.center.getAllTiles())
 
-
-        return sumTiles
-
-
-    # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
-    def convertToArray(self):
-        arr = np.zeros((25, 6))
-        for i in range(5):
-            arr[i] = self.center.factories[i].tiles.getArray()
-        arr[5] = self.center.center.getArray()
-        arr[6] = self.bag.getArray()
-        arr[7] = self.lid.getArray()
-
-        player1Arr = self.player1.getArray()
-        for i in range(8):
-            arr[8 + i] = player1Arr[i]
-
-        player2Arr = self.player2.getArray()
-        for i in range(8):
-            arr[16 + i] = player2Arr[i]
-        
-        arr[24][0] = int(self.roundFinished)
-        arr[24][1] = self.playerIDWhoHadWhiteLastRound
-        for i in range(4):
-            arr[24][i + 2] = -2
-
-        return arr
-    
-    # More ugly. Now we need to create board given the array output from convertToArray...
-    @staticmethod
-    def convertFromArray(arr):
-        arr = arr.astype(int)
-        retBoard = AzulBoard()
-        for i in range(5):
-            retBoard.center.factories[i].tiles = TileCollection.getFromArray(arr[i])
-        retBoard.center.center = TileCollection.getFromArray(arr[5])
-        retBoard.bag = TileCollection.getFromArray(arr[6])
-        retBoard.lid = TileCollection.getFromArray(arr[7])
-        retBoard.player1 = Player.getFromArray(arr[8:16])
-        retBoard.player2 = Player.getFromArray(arr[16:24])
-        retBoard.roundFinished = bool(arr[24][0])
-        retBoard.playerIDWhoHadWhiteLastRound = int(arr[24][1])
-
-        return retBoard
-
-        
+        return sumTiles        
