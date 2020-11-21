@@ -11,6 +11,15 @@ class AzulAction:
         self.color = color
         self.dest = dest
     
+    @staticmethod
+    # Return an AzulAction object given the int of the action and the player ID
+    def getActionFromInt(actionInt: int, playerID: int):
+        location = actionInt // 30
+        color = (actionInt % 30) // 6
+        line = (actionInt % 30) % 6
+
+        return AzulAction(player, location, TileColor(color), line)
+    
     def toString(self):
         return str(self.playerID) + ", " + str(self.source) + ", " + str(self.color) + ", " + str(self.dest)
     

@@ -71,7 +71,7 @@ class AzulGame(Game):
 
         moves = []
         for i in range(self.getActionSize()):
-            action = boardObj.decodeAction(player, i)
+            action = AzulAction.getActionFromInt(i, player)
             if boardObj.isActionValid(action):
                 moves.append(1)
             else:

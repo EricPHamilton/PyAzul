@@ -70,24 +70,11 @@ class AzulBoard():
             lines.append([i + 1, color, number])
         
         return lines
-        '''        self.lines = []
-        self.lines.append([1, None, 0])
-        self.lines.append([2, None, 0])
-        self.lines.append([3, None, 0])
-        self.lines.append([4, None, 0])
-        self.lines.append([5, None, 0])'''
 
 
     def getNextState(self, player, actionInt):
-        action = self.decodeAction(player, actionInt)
+        action = AzulAction.getActionFromInt(actionInt, player)
         return self.executeAction(action)
-    
-    def decodeAction(self, player: int, actionInt):
-        location = actionInt // 30
-        color = (actionInt % 30) // 6
-        line = (actionInt % 30) % 6
-
-        return AzulAction(player, location, TileColor(color), line)
     
     def getPlayerFromAction(self, action: AzulAction) -> Player:
         if action.playerID == 1:
