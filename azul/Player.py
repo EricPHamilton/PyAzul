@@ -34,7 +34,7 @@ class Player:
     def finishRound(self) -> tuple:
         wallScore = [0, 0] # First is "standard score", second is "bonus" score.
         floorScore = self.floorLine.getScore()
-        tilesToBag = TileCollection(0, 0, 0, 0, 0, 0)
+        tilesToBag = TileCollection()
 
         for line in self.playerLines.lines:
             color = line[1]
@@ -70,7 +70,7 @@ class Player:
 
         # add to floor line and calc overflow for lid
         overflowNum = max((self.floorLine.tileCollection.getCount() + count) - 7, 0)
-        overflowCollection = TileCollection(0, 0, 0, 0, 0, 0)
+        overflowCollection = TileCollection()
         overflowCollection.addTiles(action.color, overflowNum)
         tiles.removeTiles(action.color, overflowNum)
         tiles.moveAllTiles(self.floorLine.tileCollection)
@@ -100,7 +100,7 @@ class Player:
         return arr
     
     def getAllTiles(self):
-        tiles = TileCollection(0, 0, 0, 0, 0, 0)
+        tiles = TileCollection()
         tiles.addTilesFromCollection(self.floorLine.tileCollection)
         tiles.addTilesFromCollection(self.playerLines.getAllTiles())
         tiles.addTilesFromCollection(self.wall.getAllTiles())

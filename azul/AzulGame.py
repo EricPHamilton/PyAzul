@@ -19,7 +19,7 @@ class AzulGame(Game):
         boardObj = AzulBoard()
         if self.shouldRandomize:
             boardObj.fillWallsRandomly(random.uniform(0, 0.75))
-            tilesOnPlayerWalls = TileCollection(0, 0, 0, 0, 0, 0)
+            tilesOnPlayerWalls = TileCollection()
             tilesOnPlayerWalls.addTilesFromCollection(boardObj.player1.wall.getAllTiles())
             tilesOnPlayerWalls.addTilesFromCollection(boardObj.player2.wall.getAllTiles())
             boardObj.bag.removeTilesFromCollection(tilesOnPlayerWalls)

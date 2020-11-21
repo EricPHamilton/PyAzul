@@ -2,7 +2,7 @@ from .TileCollection import TileCollection
 
 class FloorLine():
     def __init__(self):
-        self.tileCollection = TileCollection(0, 0, 0, 0, 0, 0)
+        self.tileCollection = TileCollection()
 
     def display(self):
         print("FLOOR LINE:")

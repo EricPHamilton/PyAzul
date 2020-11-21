@@ -12,7 +12,7 @@ class AzulBoard():
         self.player1 = Player(1)
         self.player2 = Player(-1)
         self.bag = TileCollection(20, 20, 20, 20, 20, 0)
-        self.lid = TileCollection(0, 0, 0, 0, 0, 0)
+        self.lid = TileCollection()
         self.center = Center(self.bag, self.lid)
         self.roundFinished = False
         self.playerIDWhoHadWhiteLastRound = 0
@@ -177,7 +177,7 @@ class AzulBoard():
     def getAllTiles(self):
         # Created as a sanity check. Make sure there are 20/20/20/20/20/1 tiles in the game at all times.
 
-        sumTiles = TileCollection(0, 0, 0, 0, 0, 0)
+        sumTiles = TileCollection()
         sumTiles.addTilesFromCollection(self.bag)
         sumTiles.addTilesFromCollection(self.lid)
         sumTiles.addTilesFromCollection(self.player1.getAllTiles())

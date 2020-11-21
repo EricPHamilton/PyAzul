@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 class TileCollection():
-    def __init__(self, numBlue, numYellow, numRed, numBlack, numCyan, numWhite):
+    def __init__(self, numBlue = 0, numYellow = 0, numRed = 0, numBlack = 0, numCyan = 0, numWhite = 0):
         self.tiles = [numBlue, numYellow, numRed, numBlack, numCyan, numWhite]
 
     def copy(self):
@@ -40,7 +40,7 @@ class TileCollection():
         sample = [TileColor.BLUE] * self.tiles[0] + [TileColor.YELLOW] * self.tiles[1] + [TileColor.RED] * self.tiles[2] + [TileColor.BLACK] * self.tiles[3] + [TileColor.CYAN] * self.tiles[4]
         randSample = random.sample(sample, count)
 
-        retTiles = TileCollection(0, 0, 0, 0, 0, 0)
+        retTiles = TileCollection()
 
         for tile in randSample:
             self.removeTiles(tile, 1)

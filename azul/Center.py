@@ -19,9 +19,7 @@ class Center():
             string += (self.factories[i].tiles.getOutputString() + "\t")
             print(string)
         string = "Center:\t" + self.center.getOutputString()
-        print(string)
-        
-        
+        print(string)     
 
     def toString(self):
         retStr = "Loc\tBlue\tYellow\tRed\tBlack\tCyan\tWhite\n"
@@ -49,7 +47,7 @@ class Center():
             sourceCollection = self.center
         
         count = sourceCollection.getCountOfColor(action.color)
-        retCollection = TileCollection(0, 0, 0, 0, 0, 0)
+        retCollection = TileCollection()
         retCollection.addTiles(action.color, count)
         sourceCollection.removeTiles(action.color, count)
 
@@ -65,7 +63,7 @@ class Center():
         return retCollection
     
     def getAllTiles(self) -> TileCollection:
-        sumTiles = TileCollection(0, 0, 0, 0, 0, 0)
+        sumTiles = TileCollection()
         sumTiles.addTilesFromCollection(self.center)
         for i in range(5):
             sumTiles.addTilesFromCollection(self.factories[i].tiles)
