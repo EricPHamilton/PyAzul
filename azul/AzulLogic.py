@@ -1,7 +1,6 @@
 from .Player import Player
 from .TileCollection import TileCollection
 from .Center import Center
-from .Bag import Bag
 from .TileColor import TileColor
 from .AzulAction import AzulAction
 import random
@@ -12,7 +11,7 @@ class AzulBoard():
     def __init__(self):
         self.player1 = Player(1)
         self.player2 = Player(-1)
-        self.bag = Bag()
+        self.bag = TileCollection(20, 20, 20, 20, 20, 0)
         self.lid = TileCollection(0, 0, 0, 0, 0, 0)
         self.center = Center(self.bag, self.lid)
         self.roundFinished = False
@@ -20,7 +19,7 @@ class AzulBoard():
 
     def display(self):
         print("---------------------------------------------------------")
-        self.bag.display()
+        print("Bag:", self.bag.toString())
         self.lid.display()
         
         self.center.display()
@@ -59,11 +58,11 @@ class AzulBoard():
             if addSomeTiles:
                 validColors = player.wall.getValidColorsForRow(i)
                 color = np.random.choice(validColors)
-                number = min(np.random.randint(0, i + 1), bag.tiles.getCountOfColor(color)) # Don't remove tiles we don't have in the bag.
+                number = min(np.random.randint(0, i + 1), bag.getCountOfColor(color)) # Don't remove tiles we don't have in the bag.
                 if number == 0:
                     color = None
                 else:
-                    bag.tiles.removeTiles(color, number)
+                    bag.removeTiles(color, number)
             else:
                 color = None
                 number = 0
@@ -157,14 +156,14 @@ class AzulBoard():
 
         # move tiles to bag and lid
         (tilesToBag, tilesToLid) = self.player1.finishRound()
-        tilesToBag.moveAllTiles(self.bag.tiles)
+        tilesToBag.moveAllTiles(self.bag)
         tilesToLid.moveAllTiles(self.lid)
 
         if (self.player2.floorLine.tileCollection.getCountOfColor(TileColor.WHITE) > 0):
             self.playerIDWhoHadWhiteLastRound = self.player2.id
 
         (tilesToBag, tilesToLid) = self.player2.finishRound()
-        tilesToBag.moveAllTiles(self.bag.tiles)
+        tilesToBag.moveAllTiles(self.bag)
         tilesToLid.moveAllTiles(self.lid)
 
     
@@ -179,7 +178,7 @@ class AzulBoard():
         # Created as a sanity check. Make sure there are 20/20/20/20/20/1 tiles in the game at all times.
 
         sumTiles = TileCollection(0, 0, 0, 0, 0, 0)
-        sumTiles.addTilesFromCollection(self.bag.tiles)
+        sumTiles.addTilesFromCollection(self.bag)
         sumTiles.addTilesFromCollection(self.lid)
         sumTiles.addTilesFromCollection(self.player1.getAllTiles())
         sumTiles.addTilesFromCollection(self.player2.getAllTiles())
@@ -195,7 +194,7 @@ class AzulBoard():
         for i in range(5):
             arr[i] = self.center.factories[i].tiles.getArray()
         arr[5] = self.center.center.getArray()
-        arr[6] = self.bag.tiles.getArray()
+        arr[6] = self.bag.getArray()
         arr[7] = self.lid.getArray()
 
         player1Arr = self.player1.getArray()
@@ -221,7 +220,7 @@ class AzulBoard():
         for i in range(5):
             retBoard.center.factories[i].tiles = TileCollection.getFromArray(arr[i])
         retBoard.center.center = TileCollection.getFromArray(arr[5])
-        retBoard.bag.tiles = TileCollection.getFromArray(arr[6])
+        retBoard.bag = TileCollection.getFromArray(arr[6])
         retBoard.lid = TileCollection.getFromArray(arr[7])
         retBoard.player1 = Player.getFromArray(arr[8:16])
         retBoard.player2 = Player.getFromArray(arr[16:24])

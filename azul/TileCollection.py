@@ -1,5 +1,6 @@
 from .TileColor import TileColor
 import numpy as np
+import random
 
 class TileCollection():
     def __init__(self, numBlue, numYellow, numRed, numBlack, numCyan, numWhite):
@@ -35,9 +36,9 @@ class TileCollection():
     def setCountOfColor(self, color: TileColor, count: int):
         self.tiles[color.value] = count
     
-    def pickRandomTiles(self, count, rand):
+    def pickRandomTiles(self, count):
         sample = [TileColor.BLUE] * self.tiles[0] + [TileColor.YELLOW] * self.tiles[1] + [TileColor.RED] * self.tiles[2] + [TileColor.BLACK] * self.tiles[3] + [TileColor.CYAN] * self.tiles[4]
-        randSample = rand.sample(sample, count)
+        randSample = random.sample(sample, count)
 
         retTiles = TileCollection(0, 0, 0, 0, 0, 0)
 
