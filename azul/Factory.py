@@ -1,10 +1,11 @@
 from .TileCollection import TileCollection
 
-
 class Factory():
-    def __init__(self, bag, lid: TileCollection):
-        if bag.getCount() < 4:
-            self.tiles = TileCollection(0, 0, 0, 0, 0, 0)
+    def __init__(self, bag: TileCollection, lid: TileCollection):
+        if bag.getCount() >= 4:
+            self.tiles = bag.pickRandomTiles(4)
+        else:
+            self.tiles = TileCollection()
             # Move all tiles that are left in the bag
             bag.moveAllTiles(self.tiles)
             numberStillNeeded = 4 - self.tiles.getCount()
@@ -20,9 +21,6 @@ class Factory():
             # continue randomly picking
             remainingTiles = bag.pickRandomTiles(numberStillNeeded)
             self.tiles.addTilesFromCollection(remainingTiles)
-
-        else:
-            self.tiles = bag.pickRandomTiles(4)
     
     def toString(self):
         return self.tiles.toString()
