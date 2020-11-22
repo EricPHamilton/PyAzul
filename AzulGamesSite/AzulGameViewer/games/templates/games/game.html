@@ -1,0 +1,10 @@
+<p>{{ game_time }}</p>
+{% if turn_list %}
+    <ul>
+    {% for turn in turn_list %}
+        <li><a href="/games/{{ turn.game_id.id }}/{{ turn.turn_ctr }}">{{ game.id }} - Turn {{ turn.turn_ctr }} {{turn.turn_string}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No turns are available.</p>
+{% endif %}

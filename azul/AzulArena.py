@@ -1,3 +1,4 @@
+import json
 import logging
 
 from tqdm import tqdm
@@ -13,7 +14,7 @@ class AzulArena():
     An Arena class where any 2 agents can be pit against each other.
     """
 
-    def __init__(self, player1, player2, game, display=None):
+    def __init__(self, player1, player2, game, display=None, dbConn=None):
         """
         Input:
             player 1,2: two functions that takes board as input, return action
@@ -29,8 +30,9 @@ class AzulArena():
         self.player2 = player2
         self.game = game
         self.display = display
+        self.dbConn = dbConn
 
-    def playRound(self, board, verbose=False) -> AzulBoard:
+    def playRound(self, board, gameTurnCtr: int, verbose=False) -> tuple:
         """
         Executes one episode of a game.
 
@@ -45,12 +47,12 @@ class AzulArena():
         if curPlayer == 0:
             curPlayer = 1
             
-        it = 0
+        roundCtr = 0
         while self.game.getGameEnded(board, curPlayer) == 0:
-            it += 1
+            roundCtr += 1
+            gameTurnCtr += 1
             if verbose:
-                assert self.display
-                print("Turn ", str(it), "Player ", str(curPlayer))
+                print("Turn ", str(roundCtr), "Player ", str(curPlayer))
                 self.display(board)
             action = players[curPlayer + 1](self.game.getCanonicalForm(board, curPlayer))
 
@@ -61,15 +63,21 @@ class AzulArena():
                 log.debug(f'valids = {valids}')
                 assert valids[action] > 0
             
+            actionObj = AzulAction.getActionFromInt(action, curPlayer)
             if verbose:
-                actionObj = AzulAction.getActionFromInt(action, curPlayer)
                 print(actionObj.getTurnExplanationString())
+            if self.dbConn:
+                game_id = self.dbConn[1]
+                board_state = json.dumps(board.tolist())
+                turn_string = actionObj.getTurnExplanationString()
+                turn_ctr = gameTurnCtr 
+                self.dbConn[0].cursor().execute('insert or replace into games_turn(game_id_id, board_state, turn_string, turn_ctr) values (?, ?, ?, ?)', [game_id, board_state, turn_string, turn_ctr])
 
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
 
         if verbose:
             assert self.display
-            print("Round over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
+            print("Round over: Turn ", str(roundCtr), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
         
         retBoard = BoardConverter.createBoardFromArray(board)
@@ -77,7 +85,7 @@ class AzulArena():
             print("Gained or lost a tile somewhere!")
             exit(-3)
 
-        return BoardConverter.createBoardFromArray(board)
+        return (BoardConverter.createBoardFromArray(board), gameTurnCtr)
 
     def playFullGame(self, verbose=False):
         """
@@ -88,8 +96,10 @@ class AzulArena():
             twoWon: games won by player2
             draws:  games won by nobody
         """
+
         board = None
         gameIsFinished = False
+        gameTurnCtr = 0
 
         while not gameIsFinished:
             if board is None:
@@ -99,7 +109,7 @@ class AzulArena():
                 boardObj.setupNextRound()
                 board = BoardConverter.createArrayFromBoard(boardObj)
 
-            newBoard = self.playRound(board, verbose=verbose)
+            newBoard, gameTurnCtr = self.playRound(board, gameTurnCtr, verbose=verbose)
             gameIsFinished = newBoard.isGameFinished()
             board = BoardConverter.createArrayFromBoard(newBoard)
 

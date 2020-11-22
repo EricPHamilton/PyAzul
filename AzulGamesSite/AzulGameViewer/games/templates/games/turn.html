@@ -1,0 +1,6 @@
+<p>{{ turn.turn_string }}</p>
+<ul>
+    <div>
+        {% include "games/board.html" with board=turn.board_state %}
+    </div>
+</ul>

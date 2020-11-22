@@ -15,7 +15,7 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 
-randPlayers = True
+randPlayers = False
 
 g = AzulGame(shouldRandomize=False)
 
@@ -25,7 +25,7 @@ rp1 = RandomPlayer(g).play
 rp2 = RandomPlayer(g).play
 n2 = NNet(g)
 
-loadCheckpoint = False
+loadCheckpoint = True
 
 if loadCheckpoint:
     n2.load_checkpoint('./temp/', 'best.pth.tar')
@@ -36,7 +36,7 @@ n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
 player2 = n2p  # Player 2 is neural network if it's cpu vs cpu.
 
-numberGames = 100
+numberGames = 1
 verbose = True
 
 for _ in range(numberGames):
