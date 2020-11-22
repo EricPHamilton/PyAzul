@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404
 from django.template import loader
 
 from .models import Game, Turn
+from .BoardStateParser import BoardStateParser
 
 # Create your views here.
 def index(request):
@@ -39,7 +40,10 @@ def turn(request, game_id, turn_id):
         raise Http404("Turn does not exist")
 
     template = loader.get_template('games/turn.html')
+
     context = {
         'turn': turn,
+        'board_context': BoardStateParser().getBoardContextVars(turn.board_state),
     }
+
     return HttpResponse(template.render(context, request))
