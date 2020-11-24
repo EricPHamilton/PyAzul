@@ -1,8 +1,43 @@
 class BoardStateParser:
+    def getColorCssClass(self, indexInTileCollection):
+        if indexInTileCollection == 0:
+            return "_tileBlue"
+        elif indexInTileCollection == 1:
+            return "_tileYellow"
+        elif indexInTileCollection == 2:
+            return "_tileRed"
+        elif indexInTileCollection == 3:
+            return "_tileBlack"
+        elif indexInTileCollection == 4:
+            return "_tileCyan"
+        elif indexInTileCollection == 5:
+            return "_tileWhite"
+    
+    def getWallColorCssClass(self, row, column):
+        diff = column - row
+        if diff < 0:
+            diff = diff + 5
+        return self.getColorCssClass(diff)
+
+    def getTileLine(self, colorsArray, maxDisplayTiles):
+        tileLine = {}
+        tileLine['maxLength'] = maxDisplayTiles
+
+        tiles = []
+        
+        for i in range(len(colorsArray)):
+            for numColoredTiles in range(int(colorsArray[i])):
+                tiles.append(self.getColorCssClass(i))
+        
+        while len(tiles) < maxDisplayTiles:
+            tiles.append("")
+                            
+        return tiles
+
     def getFactories(self, boardState):
         factories = []
         for i in range(5):
-            factories.append(boardState[i])
+            factories.append(self.getTileLine(boardState[i], 4))
         return factories
     
     def getBag(self, boardState):
@@ -19,21 +54,30 @@ class BoardStateParser:
         else:
             startingRow = 16
         
-        playerDict['id'] = boardState[startingRow][0]
-        playerDict['score'] = boardState[startingRow + 1][0]
+        playerDict['id'] = int(boardState[startingRow][0])
+        playerDict['score'] = int(boardState[startingRow + 1][0])
         
         playerLines = []
         for i in range(5):
-            color = boardState[startingRow][i + 1]
-            number = boardState[startingRow + 1][i + 1]
-        playerLines.append([color, number])
+            color = int(boardState[startingRow][i + 1])
+            number = int(boardState[startingRow + 1][i + 1])
+            tileCounts = [0, 0, 0, 0, 0, 0]
+            tileCounts[color] = number
+            playerLines.append(self.getTileLine(tileCounts, i + 1))
 
         playerDict['playerLines'] = playerLines
-        playerDict['floorLine'] = boardState[startingRow + 2]
+
+        playerDict['floorLine'] = self.getTileLine(boardState[startingRow + 2], 7)
 
         wall = []
         for i in range(5):
-            wall.append(boardState[startingRow + 3][:-1])
+            wallRow = []
+            for j in range(5):
+                tile = {}
+                tile['cssClass'] = self.getWallColorCssClass(i, j)
+                tile['filled'] = int(boardState[startingRow + 3 + i][j])
+                wallRow.append(tile)
+            wall.append(wallRow)
         
         playerDict['wall'] = wall
 

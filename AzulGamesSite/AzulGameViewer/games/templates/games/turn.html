@@ -1,6 +1,12 @@
 <p>{{ turn.turn_string }}</p>
+
 <ul>
     <div>
-        {% include "games/board.html" with board=turn.board_state %}
+        {% include "games/board.html" with board=board_context %}
+    </div>
+
+    <div>
+        <a href="/games/{{turn.game_id.id}}/{{turn.turn_ctr|add:'-1'}}/">Previous turn</a>
+        <a href="/games/{{turn.game_id.id}}/{{turn.turn_ctr|add:'1'}}/">Next turn</a>
     </div>
 </ul>

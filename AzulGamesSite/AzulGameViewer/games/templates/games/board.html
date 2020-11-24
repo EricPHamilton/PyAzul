@@ -1,5 +1,18 @@
-<p> Ayyyyy this is a board </p>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'games/style.css' %}">
 
-{% for row in board %}
-    {{ row }} </br>
-{% endfor %}
+<p>{{ board.bag }}</p>
+<p>{{ board.lid }}</p>
+
+<div class="_factories">
+    {% for factory in board.factories %}
+        <div class="_factory">
+            {% include "games/tileLine.html" with tiles=factory %}
+        </div>
+    {% endfor %}
+</div>
+
+<div>
+    {% include "games/player.html" with player=board.player1 %}
+    {% include "games/player.html" with player=board.player2 %}
+</div>

@@ -1,0 +1,9 @@
+<div>
+    {% for tileRow in tiles %}
+        <div>
+            {% for tile in tileRow %}
+                <div class="_tile {{ tile.cssClass }} {% if tile.filled == 0 %} _opaque {% endif %}"></div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

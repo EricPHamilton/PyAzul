@@ -1,0 +1,22 @@
+<div class="_playerBoard">
+    <div>
+        Player {{player.id}} -
+        Score: {{player.score}}
+    </div>
+    <div class="_playerLineAndWallContainer">
+        <div class="_playerLines">
+            {% include "games/tileLine.html" with tiles=player.playerLines.0 %}
+            {% include "games/tileLine.html" with tiles=player.playerLines.1 %}
+            {% include "games/tileLine.html" with tiles=player.playerLines.2 %}
+            {% include "games/tileLine.html" with tiles=player.playerLines.3 %}
+            {% include "games/tileLine.html" with tiles=player.playerLines.4 %}
+        </div>
+        <div class="_separator"></div>
+        <div class="_playerWall">
+            {% include "games/wall.html" with tiles=player.wall %}
+        </div>
+    </div>
+    <div class="_floorLine">
+        {% include "games/tileLine.html" with tiles=player.floorLine %}
+    </div>
+</div>

@@ -42,6 +42,7 @@ def turn(request, game_id, turn_id):
     template = loader.get_template('games/turn.html')
 
     context = {
+        'game_id': game_id,
         'turn': turn,
         'board_context': BoardStateParser().getBoardContextVars(turn.board_state),
     }

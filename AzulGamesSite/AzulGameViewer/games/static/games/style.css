@@ -1,0 +1,76 @@
+._playerBoard {
+    border: 1px solid blue;
+    width: 300px;
+    display: inline-block;
+    padding: 3px;
+}
+
+._factories {
+    display: flex;
+}
+
+._factory {
+    height: 50px;
+    width: 50px;
+    margin: 5px;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+._playerLineAndWallContainer {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+._playerLines {
+    text-align: right;
+    display: inline-block;
+}
+
+._separator {
+    width: 30px;
+    display: inline-block;
+}
+
+._playerWall {
+    display: inline-block;
+}
+
+._tile {
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+    display: inline-block;
+}
+
+._opaque {
+    opacity: 0.2;
+}
+
+._tileLine{
+    display: block;
+}
+
+._tileBlue {
+    background-color: blue;
+}
+
+._tileYellow {
+    background-color: gold;
+}
+
+._tileRed {
+    background-color: red;
+}
+
+._tileBlack {
+    background-color: black;
+}
+
+._tileCyan {
+    background-color: cyan;
+}
+
+._tileWhite {
+    background-color: darkgray;
+}
