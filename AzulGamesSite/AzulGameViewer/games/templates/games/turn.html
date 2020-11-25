@@ -9,4 +9,8 @@
         <a href="/games/{{turn.game_id.id}}/{{turn.turn_ctr|add:'-1'}}/">Previous turn</a>
         <a href="/games/{{turn.game_id.id}}/{{turn.turn_ctr|add:'1'}}/">Next turn</a>
     </div>
+
+    {% for move in turn.valid_moves %}
+        {{ move }} </br>
+    {% endfor %}
 </ul>

@@ -40,11 +40,14 @@ class BoardStateParser:
             factories.append(self.getTileLine(boardState[i], 4))
         return factories
     
+    def getCenter(self, boardState):
+        return self.getTileLine(boardState[5], 100)
+
     def getBag(self, boardState):
-        return boardState[5]
+        return boardState[6]
     
     def getLid(self, boardState):
-        return boardState[6]
+        return boardState[7]
     
     def getPlayer(self, boardState, playerID):
         playerDict = {}
@@ -88,6 +91,7 @@ class BoardStateParser:
 
         retDict['board_state'] = boardState
         retDict['factories'] = self.getFactories(boardState)
+        retDict['center'] = self.getCenter(boardState)
         retDict['bag'] = self.getBag(boardState)
         retDict['lid'] = self.getLid(boardState)
         retDict['player1'] = self.getPlayer(boardState, 1)

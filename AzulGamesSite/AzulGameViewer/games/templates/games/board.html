@@ -12,6 +12,10 @@
     {% endfor %}
 </div>
 
+<div class="_center">
+    {% include "games/tileLine.html" with tiles=board.center %}
+</div>
+
 <div>
     {% include "games/player.html" with player=board.player1 %}
     {% include "games/player.html" with player=board.player2 %}

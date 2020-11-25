@@ -9,3 +9,4 @@ class Turn(models.Model):
     turn_ctr = models.IntegerField('turn_ctr')
     board_state = models.JSONField()
     turn_string = models.CharField('turn_string', max_length=200)
+    valid_moves = models.JSONField()
