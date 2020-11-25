@@ -6,6 +6,7 @@ from .AzulLogic import AzulBoard
 from .TileCollection import TileCollection
 from .BoardConverter import BoardConverter
 from .AzulAction import AzulAction
+from .Wall import Wall
 import random
 import numpy as np
 import itertools
@@ -58,7 +59,7 @@ class AzulGame(Game):
         newBoard = boardObj.getNextState(player, action)
         return (BoardConverter.createArrayFromBoard(newBoard), -player)
 
-    def getValidMoves(self, board: AzulBoard, player: int):
+    def getValidMoves(self, board, player: int):
         """
         Input:
             board: current board
@@ -68,16 +69,33 @@ class AzulGame(Game):
                         moves that are valid from the current board and player,
                         0 for invalid moves
         """
-        boardObj = BoardConverter.createBoardFromArray(board)
-
-        moves = []
+        moves = [0] * self.getActionSize()
         for i in range(self.getActionSize()):
             action = AzulAction.getActionFromInt(i, player)
-            if boardObj.isActionValid(action):
-                moves.append(1)
-            else:
-                moves.append(0)
 
+            playerArr = BoardConverter.getPlayerArray(board, player)
+            centerArr = BoardConverter.getCenterArray(board)
+
+            # Quit if source/color combo doesn't exist in center.
+            if centerArr[action.source][action.color.value] == 0:
+                continue
+
+            if action.dest != 5:
+                colorOfLine = playerArr[0][action.dest + 1]
+                countOfLine = playerArr[1][action.dest + 1]
+                # We're not good if the color of line is not empty AND not equal to action.
+                if colorOfLine != -1 and colorOfLine != action.color.value:
+                    continue
+
+                # We're not good if the line is full.
+                if countOfLine >= action.dest + 1:
+                    continue
+                    
+                # Quit if the wall tile associated with the line/color is filled
+                if playerArr[3 + action.dest][Wall.getIndexOfColorInRow(action.dest, action.color)] == 1:
+                    continue
+
+            moves[i] = 1
         return moves
 
     def getGameEnded(self, board, player):

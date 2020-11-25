@@ -81,29 +81,9 @@ class AzulBoard():
             return self.player1
         else:
             return self.player2
-    
-    def isActionValid(self, action: AzulAction):
-        actionPlayer = self.getPlayerFromAction(action)
 
-        # Quit if source/color combo doesn't exist in center.
-        if self.center.countTiles(action.source, action.color) == 0:
-            return False
-
-        # Quit if line is full or is already of another color 
-        if not actionPlayer.playerLines.isActionValid(action.color, action.dest):
-            return False
-        
-        # Quit if the wall tile associated with the line/color is filled
-        if action.dest != 5 and actionPlayer.wall.isCellFilled(action.dest, action.color):
-            return False
-        
-        return True
     
     def executeAction(self, action: AzulAction):
-        if not self.isActionValid(action):
-            print("Attempted to execute an invalid action! Quitting with action:", action.toString())
-            exit(2)
-
         actionPlayer = self.getPlayerFromAction(action)
         
         # Manipulate tiles from center

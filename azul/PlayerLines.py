@@ -21,15 +21,6 @@ class PlayerLines():
             string += ("Line " + str(i + 1) + ": ") + countColorString + "\n"
         return string[:-1]
     
-    def isActionValid(self, color, line):
-        if line != 5 and self.lines[line][0] == self.lines[line][2]:
-            return False
-        
-        if line != 5 and self.lines[line][1] != None and color != self.lines[line][1]:
-            return False
-        
-        return True
-    
     def placeTiles(self, line, color, count) -> TileCollection:
         lineTuple = self.lines[line]
         lineTuple[1] = color

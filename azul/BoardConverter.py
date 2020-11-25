@@ -6,6 +6,7 @@ import numpy as np
 
 class BoardConverter:
     # This will be ugly... We need to convert the entirety of the board into an array. Yikes.
+    @staticmethod
     def createArrayFromBoard(board: AzulBoard):
         arr = np.zeros((25, 6))
         for i in range(5):
@@ -45,4 +46,15 @@ class BoardConverter:
         retBoard.playerIDWhoHadWhiteLastRound = int(arr[24][1])
 
         return retBoard
-        
+    
+    @staticmethod
+    def getPlayerArray(arr, player):
+        if player == 1:
+            rowStart = 8
+        else:
+            rowStart = 16
+        return arr[rowStart:rowStart + 8].astype(int)
+    
+    @staticmethod
+    def getCenterArray(arr):
+        return arr[0:8].astype(int)
