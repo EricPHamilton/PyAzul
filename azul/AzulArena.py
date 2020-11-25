@@ -58,22 +58,24 @@ class AzulArena():
 
             valids = self.game.getValidMoves(self.game.getCanonicalForm(board, curPlayer), 1)
 
-            if valids[action] == 0:
-                log.error(f'Action {action} is not valid!')
-                log.debug(f'valids = {valids}')
-                assert valids[action] > 0
-            
             actionObj = AzulAction.getActionFromInt(action, curPlayer)
             if verbose:
                 print(actionObj.getTurnExplanationString())
+
+            board, curPlayer = self.game.getNextState(board, curPlayer, action)
+
             if self.dbConn:
                 game_id = self.dbConn[1]
                 board_state = json.dumps(board.tolist())
                 turn_string = actionObj.getTurnExplanationString()
                 turn_ctr = gameTurnCtr 
-                self.dbConn[0].cursor().execute('insert or replace into games_turn(game_id_id, board_state, turn_string, turn_ctr) values (?, ?, ?, ?)', [game_id, board_state, turn_string, turn_ctr])
-
-            board, curPlayer = self.game.getNextState(board, curPlayer, action)
+                moves = self.game.getValidMoves(self.game.getCanonicalForm(board, curPlayer), 1)
+                valid_moves = []
+                for i in range(len(moves)):
+                    if moves[i]:
+                        valid_moves.append(AzulAction.getActionFromInt(i, 1).getTurnExplanationString())
+                valid_moves = json.dumps(valid_moves)
+                self.dbConn[0].cursor().execute('insert or replace into games_turn(game_id_id, board_state, turn_string, turn_ctr, valid_moves) values (?, ?, ?, ?, ?)', [game_id, board_state, turn_string, turn_ctr, valid_moves])
 
         if verbose:
             assert self.display
