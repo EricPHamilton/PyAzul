@@ -56,11 +56,12 @@ class TileCollection():
             self.tiles[i] += collection.tiles[i]
 
     def removeTiles(self, color, count):
-        self.tiles[color.value] -= count
-        if self.tiles[color.value] < 0:
+        if self.tiles[color.value] - count < 0:
             print("Removed tiles that didn't exist:", color, count)
             exit(0)
-    
+        else:
+            self.tiles[color.value] -= count
+
     def removeTilesFromCollection(self, collection):
         for i in range(6):
             self.tiles[i] -= collection.tiles[i]

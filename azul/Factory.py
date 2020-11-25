@@ -17,6 +17,9 @@ class Factory():
             # have enough tiles, we continue even though all factory displays are not filled.
             # This condition is impossible to hit in 2-player Azul, which is why I haven't
             # implemented it.
+            if (bag.getCount() < numberStillNeeded):
+                print("Something has gone horribly, horribly wrong.")
+                exit(6)
 
             # continue randomly picking
             remainingTiles = bag.pickRandomTiles(numberStillNeeded)

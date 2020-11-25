@@ -115,7 +115,7 @@ class AzulBoard():
         self.playerIDWhoHadWhiteLastRound = 0 # Reset 
 
         # Track if player1 had white tile
-        if (self.player1.floorLine.tileCollection.getCountOfColor(TileColor.WHITE) > 0):
+        if (self.player1.hasWhiteTile):
             self.playerIDWhoHadWhiteLastRound = self.player1.id
 
         # move tiles to bag and lid
@@ -123,7 +123,7 @@ class AzulBoard():
         tilesToBag.moveAllTiles(self.bag)
         tilesToLid.moveAllTiles(self.lid)
 
-        if (self.player2.floorLine.tileCollection.getCountOfColor(TileColor.WHITE) > 0):
+        if (self.player2.hasWhiteTile):
             self.playerIDWhoHadWhiteLastRound = self.player2.id
 
         (tilesToBag, tilesToLid) = self.player2.finishRound()
@@ -134,6 +134,8 @@ class AzulBoard():
     def setupNextRound(self):
         self.roundFinished = False
         self.center = Center(self.bag, self.lid)
+        self.player1.hasWhiteTile = False
+        self.player2.hasWhiteTile = False
 
     def isGameFinished(self):
         return self.player1.wall.hasFinishedRow() or self.player2.wall.hasFinishedRow()

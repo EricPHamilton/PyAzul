@@ -13,6 +13,7 @@ class Player:
         self.floorLine = FloorLine()
         self.playerLines = PlayerLines()
         self.score = 0
+        self.hasWhiteTile = False
     
     def toString(self):
         return str(self.id) + "\n" + self.playerLines.toString() + self.wall.toString() + self.floorLine.toString()
@@ -58,24 +59,44 @@ class Player:
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:
         # If we picked the white tile, place it on the floor line.
         if tiles.getCountOfColor(TileColor.WHITE) > 0:
-            self.floorLine.tileCollection.addTiles(TileColor.WHITE, 1)
-            tiles.removeTiles(TileColor.WHITE, 1)
+            if self.floorLine.tileCollection.getCount() == 7:
+                # Yikes. This is a heck of a situation that isn't covered in the rule book. Where do
+                # we put the white tile if the floor line is full already?
+                # I'm placing it "on the side of the board". Ie, the player still 'has' it, but it's
+                # not in the floor line and it's not in the lid. It's in a weird limbo.
+                print("Hit that weird white tile state.")
+                tiles.removeTiles(TileColor.WHITE, 1)
+                self.hasWhiteTile = True
+            else:
+                self.floorLine.tileCollection.addTiles(TileColor.WHITE, 1)
+                tiles.removeTiles(TileColor.WHITE, 1)
+                self.hasWhiteTile = True
         
         # Place the rest of the tiles on the chosen line
-        count = tiles.getCountOfColor(action.color)
         if action.dest < 5:
-            overflowForFloorLine = self.playerLines.placeTiles(action.dest, action.color, count)
-            count = overflowForFloorLine.getCount()
-            tiles = overflowForFloorLine
+            tilesForFloorLine = self.playerLines.placeTiles(action.dest, action.color, tiles.getCount())
+        else:
+            tilesForFloorLine = tiles
 
         # add to floor line and calc overflow for lid
-        overflowNum = max((self.floorLine.tileCollection.getCount() + count) - 7, 0)
         overflowCollection = TileCollection()
-        overflowCollection.addTiles(action.color, overflowNum)
-        tiles.removeTiles(action.color, overflowNum)
-        tiles.moveAllTiles(self.floorLine.tileCollection)
+        if tilesForFloorLine.getCount() > 0:
+            tilesForFloorLine.moveAllTiles(self.floorLine.tileCollection)
+            floorCount = self.floorLine.tileCollection.getCount()
+            if floorCount > 7:
+                overflowNum = floorCount - 7
+                overflowCollection.addTiles(action.color, overflowNum)
+                self.floorLine.tileCollection.removeTiles(action.color, overflowNum)
+        
         return overflowCollection
-    
+        
+    def getAllTiles(self):
+        tiles = TileCollection()
+        tiles.addTilesFromCollection(self.floorLine.tileCollection)
+        tiles.addTilesFromCollection(self.playerLines.getAllTiles())
+        tiles.addTilesFromCollection(self.wall.getAllTiles())
+        return tiles
+
     def getArray(self):
         arr = np.zeros((8, 6))
         arr[0][0] = self.id
@@ -97,14 +118,9 @@ class Player:
                 else:
                     arr[3 + i][j] = int(self.wall.cells[i][j])
         
+        arr[7][5] = int(self.hasWhiteTile)
+        
         return arr
-    
-    def getAllTiles(self):
-        tiles = TileCollection()
-        tiles.addTilesFromCollection(self.floorLine.tileCollection)
-        tiles.addTilesFromCollection(self.playerLines.getAllTiles())
-        tiles.addTilesFromCollection(self.wall.getAllTiles())
-        return tiles
 
     @staticmethod
     def getFromArray(arr):
@@ -123,6 +139,8 @@ class Player:
         for i in range(5):
             for j in range(5):
                 retPlayer.wall.cells[i][j] = arr[3 + i][j]
+        
+        retPlayer.hasWhiteTile = bool(arr[7][5])
         
         return retPlayer
         
