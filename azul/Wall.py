@@ -134,14 +134,11 @@ class Wall:
     
     # Returns whether the specified line is completed.
     def rowIsCompleted(self, line) -> bool:
-        return self.cells[i] == [True, True, True, True, True]
+        return self.cells[line] == [True, True, True, True, True]
     
     # Returns if the wall has at least one 'complete' row.
     def hasFinishedRow(self) -> bool:
-        for i in range(5):
-            if self.rowIsCompleted(i):
-                return True
-        return False
+        return self.getNumberOfRowsCompleted() > 0
 
     # Returns how many horizontal rows are completely filled.
     def getNumberOfRowsCompleted(self) -> int:

@@ -109,7 +109,7 @@ class AzulGame(Game):
                
         """
         boardObj = BoardConverter.createBoardFromArray(board)
-        if not boardObj.roundIsFinished:
+        if not boardObj.roundFinished:
             return 0
     
         if player == 1:
