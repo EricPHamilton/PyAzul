@@ -13,6 +13,7 @@ class Player:
         self.floorLine = FloorLine()
         self.playerLines = PlayerLines()
         self.score = 0
+        self.bonusScore = 0
         self.hasWhiteTile = False
     
     def toString(self):
@@ -52,7 +53,8 @@ class Player:
                     line[1] = None
                     line[2] = 0
         
-        self.score += max(wallScore[0] + floorScore, 0) + wallScore[1]
+        self.score = max(self.score + wallScore[0] + floorScore, 0)
+        self.bonusScore += wallScore[1]
         return tilesToLid
 
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:
@@ -106,7 +108,7 @@ class Player:
             else:
                 color = color.value
             arr[0][i + 1] = color
-        arr[1][0] = self.score
+        arr[1][0] = -2 # Previously held score - keeping free for now.
         for i in range(5):
             arr[1][i + 1] = self.playerLines.lines[i][2]
         arr[2] = self.floorLine.tileCollection.getArray()
@@ -117,6 +119,8 @@ class Player:
                 else:
                     arr[3 + i][j] = int(self.wall.cells[i][j])
         
+        arr[3][5] = int(self.score)
+        arr[4][5] = int(self.bonusScore)
         arr[7][5] = int(self.hasWhiteTile)
         
         return arr
@@ -125,7 +129,8 @@ class Player:
     def getFromArray(arr):
         retPlayer = Player(-2)
         retPlayer.id = arr[0][0]
-        retPlayer.score = arr[1][0]
+        retPlayer.score = arr[3][5]
+        retPlayer.bonusScore = arr[4][5]
         for i in range(5):
             color = arr[0][i + 1]
             if color == -1:

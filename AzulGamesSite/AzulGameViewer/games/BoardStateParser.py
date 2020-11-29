@@ -58,7 +58,8 @@ class BoardStateParser:
             startingRow = 16
         
         playerDict['id'] = int(boardState[startingRow][0])
-        playerDict['score'] = int(boardState[startingRow + 1][0])
+        playerDict['score'] = int(boardState[startingRow + 3][5])
+        playerDict['bonusScore'] = int(boardState[startingRow + 3][5])
         
         playerLines = []
         for i in range(5):
