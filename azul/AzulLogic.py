@@ -119,15 +119,13 @@ class AzulBoard():
             self.playerIDWhoHadWhiteLastRound = self.player1.id
 
         # move tiles to bag and lid
-        (tilesToBag, tilesToLid) = self.player1.finishRound()
-        tilesToBag.moveAllTiles(self.bag)
+        tilesToLid = self.player1.finishRound()
         tilesToLid.moveAllTiles(self.lid)
 
         if (self.player2.hasWhiteTile):
             self.playerIDWhoHadWhiteLastRound = self.player2.id
 
-        (tilesToBag, tilesToLid) = self.player2.finishRound()
-        tilesToBag.moveAllTiles(self.bag)
+        tilesToLid = self.player2.finishRound()
         tilesToLid.moveAllTiles(self.lid)
 
     
