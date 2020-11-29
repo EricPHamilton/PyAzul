@@ -132,12 +132,24 @@ class Wall:
     def isCellFilled(self, line, color) -> bool:
         return self.cells[line][Wall.getIndexOfColorInRow(line, color)]
     
+    # Returns whether the specified line is completed.
+    def rowIsCompleted(self, line) -> bool:
+        return self.cells[i] == [True, True, True, True, True]
+    
     # Returns if the wall has at least one 'complete' row.
     def hasFinishedRow(self) -> bool:
         for i in range(5):
-            if self.cells[i] == [True, True, True, True, True]:
+            if self.rowIsCompleted(i):
                 return True
         return False
+
+    # Returns how many horizontal rows are completely filled.
+    def getNumberOfRowsCompleted(self) -> int:
+        ctr = 0
+        for i in range(5):
+            if self.rowIsCompleted(i):
+                ctr += 1
+        return ctr
     
     # Returns a list of colors that are not yet complete for a row.
     def getValidColorsForRow(self, line) -> list:

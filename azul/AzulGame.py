@@ -109,22 +109,34 @@ class AzulGame(Game):
                
         """
         boardObj = BoardConverter.createBoardFromArray(board)
-        if boardObj.roundFinished:
-            if player == 1:
-                curPlayer = boardObj.player1
-                otherPlayer = boardObj.player2
-            else:
-                curPlayer = boardObj.player2
-                otherPlayer = boardObj.player1
-            
-            if curPlayer.score > otherPlayer.score:
+        if not boardObj.roundIsFinished:
+            return 0
+    
+        if player == 1:
+            curPlayer = boardObj.player1
+            otherPlayer = boardObj.player2
+        else:
+            curPlayer = boardObj.player2
+            otherPlayer = boardObj.player1
+
+        curPlayerScore = curPlayer.score + curPlayer.bonusScore
+        otherPlayerScore = otherPlayer.score + otherPlayer.bonusScore
+        
+        if curPlayerScore > otherPlayerScore:
+            return 1
+        elif curPlayerScore < otherPlayerScore:
+            return -1
+        else:
+            # Tie breaker is whoever has the most horizontal lines completed
+            curPlayerRowsCompl = curPlayer.wall.getNumberOfRowsCompleted()
+            otherPlayerRowsCompl = otherPlayer.wall.getNumberOfRowsCompleted()
+            if curPlayerRowsCompl > otherPlayerRowsCompl:
                 return 1
-            elif otherPlayer.score > curPlayer.score:
+            elif curPlayerRowsCompl < otherPlayerRowsCompl:
                 return -1
             else:
+                # True tie. "Win is shared", according to rules.
                 return .000001
-        else:
-            return 0
 
     def getCanonicalForm(self, board, player):
         """
