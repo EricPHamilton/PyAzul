@@ -35,7 +35,10 @@ class Player:
     def finishRound(self) -> tuple:
         wallScore = [0, 0] # First is "standard score", second is "bonus" score.
         floorScore = self.floorLine.getScore()
-        tilesToBag = TileCollection()
+
+        tilesToLid = self.floorLine.tileCollection.copy()
+        tilesToLid.setCountOfColor(TileColor.WHITE, 0)
+        self.floorLine.tileCollection.clear()
 
         for line in self.playerLines.lines:
             color = line[1]
@@ -45,16 +48,12 @@ class Player:
                     wallScore[0] += scores[0]
                     wallScore[1] += scores[1] 
 
-                    tilesToBag.addTiles(color, line[0] - 1) # We moved one tile to the wall, so it's num - 1.
+                    tilesToLid.addTiles(color, line[0] - 1) # We moved one tile to the wall, so it's num - 1.
                     line[1] = None
                     line[2] = 0
-
-        tilesToLid = self.floorLine.tileCollection.copy()
-        tilesToLid.setCountOfColor(TileColor.WHITE, 0)
-        self.floorLine.tileCollection.clear()
         
         self.score += max(wallScore[0] + floorScore, 0) + wallScore[1]
-        return (tilesToBag, tilesToLid)
+        return tilesToLid
 
     def placeTilesFromAction(self, action: AzulAction, tiles: TileCollection) -> TileCollection:
         # If we picked the white tile, place it on the floor line.
